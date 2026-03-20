@@ -13,9 +13,9 @@ const IMAGES = [
 ];
 
 const DIFFICULTIES = [
-  { label: 'Easy', grid: 3, desc: '8 tiles · Relaxed' },
-  { label: 'Moderate', grid: 4, desc: '15 tiles · Focused' },
-  { label: 'Hard', grid: 5, desc: '24 tiles · Challenging' },
+  { label: 'Easy', grid: 3, desc: '3×3 · 8 tiles' },
+  { label: 'Moderate', grid: 4, desc: '4×4 · 15 tiles' },
+  { label: 'Hard', grid: 5, desc: '5×5 · 24 tiles' },
 ];
 
 function createBoard(size: number): number[] {
@@ -133,97 +133,103 @@ export default function SlidePage() {
   // Selection screen
   if (!difficulty) {
     return (
-      <main className="flex-1 flex flex-col w-full px-6 sm:px-12 lg:px-24">
-        <nav className="border-b-2 border-black py-5 flex items-center gap-3">
-          <Link href="/" className="text-sm opacity-60 hover:opacity-100 transition-opacity font-black uppercase tracking-widest">← Back</Link>
-          <span className="opacity-20">|</span>
-          <span className="font-black uppercase tracking-widest text-sm">🧩 Slide Puzzle</span>
+      <main className="flex-1 flex flex-col w-full px-6 sm:px-12 lg:px-20">
+        {/* Nav */}
+        <nav className="py-5 flex items-center justify-between border-b border-white/5">
+          <div className="flex items-center gap-4">
+            <Link href="/" className="text-sm text-white/40 hover:text-white/70 transition-colors flex items-center gap-2">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+              Back
+            </Link>
+            <div className="w-px h-4 bg-white/10" />
+            <span className="text-sm font-medium text-white/70">🧩 Slide Puzzle</span>
+          </div>
         </nav>
 
-        <div className="flex-1 flex flex-col justify-center py-8">
+        <div className="flex-1 flex flex-col justify-center py-8 max-w-2xl mx-auto w-full">
           {/* Image selection */}
-          <div className="border-2 border-black mb-6" style={{ boxShadow: '4px 4px 0 #000' }}>
-            <div className="bg-black text-white px-5 py-3">
-              <span className="font-black uppercase tracking-widest text-xs">Choose Your Scene</span>
+          <div className="mb-8">
+            <h2 className="text-xs font-semibold text-white/30 uppercase tracking-wider mb-4">Choose your scene</h2>
+            <div className="grid grid-cols-3 gap-3">
+              {IMAGES.map((img, i) => (
+                <button
+                  key={i}
+                  onClick={() => setImageIdx(i)}
+                  className={`aspect-square rounded-xl overflow-hidden transition-all duration-200 border-2 ${
+                    imageIdx === i ? 'border-violet-500 scale-[1.02] shadow-lg shadow-violet-500/20' : 'border-transparent opacity-50 hover:opacity-75'
+                  }`}
+                  style={{ backgroundImage: `url(${img.url})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+                  title={img.label}
+                />
+              ))}
             </div>
-            <div className="p-5">
-              <div className="grid grid-cols-3 gap-3 mb-3">
-                {IMAGES.map((img, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setImageIdx(i)}
-                    className={`aspect-square overflow-hidden transition-all border-2 ${imageIdx === i ? 'border-black' : 'border-transparent opacity-40 hover:opacity-70'}`}
-                    style={{ backgroundImage: `url(${img.url})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
-                    title={img.label}
-                  />
-                ))}
-              </div>
-              <p className="text-xs opacity-50 text-center uppercase tracking-widest font-black">{IMAGES[imageIdx].label}</p>
-            </div>
+            <p className="text-sm text-white/40 text-center mt-3 font-medium">{IMAGES[imageIdx].label}</p>
           </div>
 
           {/* Difficulty */}
-          <div className="text-xs uppercase tracking-widest opacity-50 mb-3 px-1 font-black">Difficulty</div>
           <div>
-            {DIFFICULTIES.map((d, i) => (
-              <button
-                key={d.label}
-                onClick={() => startGame(d)}
-                className={`w-full border-2 border-black p-5 text-left hover:bg-black hover:text-white transition-colors group flex items-center justify-between ${i > 0 ? '-mt-[2px]' : ''}`}
-                style={{ boxShadow: i === DIFFICULTIES.length - 1 ? '4px 4px 0 #000' : undefined }}
-              >
-                <div>
-                  <div className="font-black uppercase tracking-widest text-base">{d.label}</div>
-                  <div className="text-xs opacity-50 mt-0.5">{d.desc}</div>
-                </div>
-                <span className="font-black opacity-30 group-hover:opacity-100 text-lg">→</span>
-              </button>
-            ))}
+            <h2 className="text-xs font-semibold text-white/30 uppercase tracking-wider mb-4">Select difficulty</h2>
+            <div className="space-y-3">
+              {DIFFICULTIES.map((d) => (
+                <button
+                  key={d.label}
+                  onClick={() => startGame(d)}
+                  className="w-full glass glass-hover rounded-xl p-5 text-left flex items-center justify-between group transition-all duration-200"
+                >
+                  <div>
+                    <div className="font-semibold text-white/90 text-base">{d.label}</div>
+                    <div className="text-xs text-white/30 mt-0.5">{d.desc}</div>
+                  </div>
+                  <svg className="w-5 h-5 text-white/20 group-hover:text-white/50 group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
-
-        <footer className="border-t-2 border-black py-5 flex items-center justify-between">
-          <span className="font-black uppercase tracking-widest text-sm">[ UNWIND ]</span>
-          <span className="text-xs opacity-40">Slide Puzzle</span>
-        </footer>
       </main>
     );
   }
 
   // Game screen
   return (
-    <main className="flex-1 flex flex-col w-full px-6 sm:px-12 lg:px-24">
-      <nav className="border-b-2 border-black py-5 flex items-center justify-between">
+    <main className="flex-1 flex flex-col w-full px-6 sm:px-12 lg:px-20">
+      <nav className="py-5 flex items-center justify-between border-b border-white/5">
+        <div className="flex items-center gap-4">
+          <button onClick={() => { setDifficulty(null); setRunning(false); }} className="text-sm text-white/40 hover:text-white/70 transition-colors flex items-center gap-2">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+            Change
+          </button>
+          <div className="w-px h-4 bg-white/10" />
+          <span className="text-sm font-medium text-white/70">🧩 {difficulty.label} · {image.label}</span>
+        </div>
         <div className="flex items-center gap-3">
-          <button onClick={() => { setDifficulty(null); setRunning(false); }} className="text-sm opacity-60 hover:opacity-100 transition-opacity font-black uppercase tracking-widest">← Change</button>
-          <span className="opacity-20">|</span>
-          <span className="font-black uppercase tracking-widest text-sm">🧩 {difficulty.label} · {image.label}</span>
-        </div>
-        <button onClick={() => setShowPreview(v => !v)} className="text-xs border-2 border-black px-3 py-1.5 hover:bg-black hover:text-white transition-colors uppercase tracking-widest font-black">
-          {showPreview ? 'Hide' : 'Peek'}
-        </button>
-      </nav>
-
-      {/* Stats bar */}
-      <div className="border-b-2 border-black flex">
-        <div className="flex-1 border-r-2 border-black p-4 text-center">
-          <div className="font-black text-2xl">{moves}</div>
-          <div className="text-xs uppercase tracking-widest opacity-50">Moves</div>
-        </div>
-        <div className="flex-1 border-r-2 border-black p-4 text-center">
-          <div className="font-black text-2xl">{fmt(seconds)}</div>
-          <div className="text-xs uppercase tracking-widest opacity-50">Time</div>
-        </div>
-        <div className="p-4 flex items-center">
-          <button onClick={() => startGame(difficulty)} className="border-2 border-black px-4 py-2 text-xs font-black uppercase tracking-widest hover:bg-black hover:text-white transition-colors">
+          <button onClick={() => setShowPreview(v => !v)} className="btn-secondary text-xs px-3 py-1.5">
+            {showPreview ? 'Hide' : 'Peek'}
+          </button>
+          <button onClick={() => startGame(difficulty)} className="btn-secondary text-xs px-3 py-1.5">
             ↺ Restart
           </button>
+        </div>
+      </nav>
+
+      {/* Stats */}
+      <div className="flex items-center gap-6 py-4 border-b border-white/5">
+        <div className="text-center">
+          <div className="text-xl font-bold text-white">{moves}</div>
+          <div className="text-xs text-white/30">Moves</div>
+        </div>
+        <div className="w-px h-8 bg-white/10" />
+        <div className="text-center">
+          <div className="text-xl font-bold text-white">{fmt(seconds)}</div>
+          <div className="text-xs text-white/30">Time</div>
         </div>
       </div>
 
       {/* Preview */}
       {showPreview && (
-        <div className="border-b-2 border-black fade-in overflow-hidden">
+        <div className="fade-in overflow-hidden rounded-xl mt-4 border border-white/10">
           <img src={image.url} alt={image.label} className="w-full object-cover" style={{ maxHeight: 160 }} />
         </div>
       )}
@@ -231,8 +237,8 @@ export default function SlidePage() {
       {/* Board */}
       <div className="flex-1 flex flex-col items-center justify-center py-8">
         <div
-          className="relative overflow-hidden"
-          style={{ width: boardPx, height: boardPx, border: '2px solid black', boxShadow: '4px 4px 0 #000' }}
+          className="relative overflow-hidden rounded-xl"
+          style={{ width: boardPx, height: boardPx, border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 20px 60px rgba(0,0,0,0.4)' }}
         >
           {board.map((tile, idx) => {
             if (tile === 0) return (
@@ -244,7 +250,7 @@ export default function SlidePage() {
                   height: tileSize,
                   left: (idx % size) * tileSize,
                   top: Math.floor(idx / size) * tileSize,
-                  backgroundColor: '#f5f5f5',
+                  backgroundColor: 'rgba(255,255,255,0.02)',
                 }}
               />
             );
@@ -263,7 +269,8 @@ export default function SlidePage() {
                   backgroundSize: `${boardPx}px ${boardPx}px`,
                   backgroundPosition: `-${origCol * tileSize}px -${origRow * tileSize}px`,
                   transition: 'left 0.12s ease, top 0.12s ease',
-                  outline: solved ? '2px solid black' : 'none',
+                  borderRadius: 4,
+                  outline: solved ? '2px solid rgba(167,139,250,0.5)' : 'none',
                 }}
                 onClick={() => handleTileClick(idx)}
                 onTouchStart={e => handleTouchStart(e, idx)}
@@ -273,25 +280,25 @@ export default function SlidePage() {
         </div>
 
         {!solved && (
-          <p className="text-xs opacity-30 uppercase tracking-widest mt-5 font-black">Tap a tile next to the empty space</p>
+          <p className="text-xs text-white/20 mt-5">Tap a tile next to the empty space</p>
         )}
       </div>
 
       {/* Solved */}
       {solved && (
-        <div className="fade-in border-t-2 border-black" style={{ boxShadow: '0 -4px 0 #000' }}>
-          <div className="bg-black text-white px-6 py-4 text-center">
-            <div className="text-3xl mb-1">🎉</div>
-            <div className="font-black text-xl uppercase tracking-widest">Puzzle Complete!</div>
-            <div className="text-xs opacity-60 mt-1">{moves} moves · {fmt(seconds)}</div>
-          </div>
-          <div className="p-5 flex gap-3">
-            <button onClick={() => startGame(difficulty)} className="flex-1 bg-black text-white border-2 border-black py-3 font-black uppercase tracking-widest text-sm hover:bg-white hover:text-black transition-colors">
-              Play Again
-            </button>
-            <button onClick={() => setDifficulty(null)} className="flex-1 border-2 border-black py-3 font-black uppercase tracking-widest text-sm hover:bg-black hover:text-white transition-colors">
-              Change Mode
-            </button>
+        <div className="fade-up pb-8">
+          <div className="glass rounded-2xl p-8 text-center max-w-sm mx-auto glow-purple">
+            <div className="text-4xl mb-3">🎉</div>
+            <div className="text-xl font-bold text-white mb-1">Puzzle Complete!</div>
+            <div className="text-sm text-white/40 mb-6">{moves} moves · {fmt(seconds)}</div>
+            <div className="flex gap-3">
+              <button onClick={() => startGame(difficulty)} className="btn-primary flex-1 py-3 text-sm rounded-xl">
+                Play Again
+              </button>
+              <button onClick={() => setDifficulty(null)} className="btn-secondary flex-1 py-3 text-sm rounded-xl">
+                Change Mode
+              </button>
+            </div>
           </div>
         </div>
       )}

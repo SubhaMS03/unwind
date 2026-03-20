@@ -30,10 +30,10 @@ const GRID: Record<Difficulty, string> = {
   hard: 'grid-cols-6',
 };
 
-const DIFF_INFO: Record<Difficulty, string> = {
-  easy: '4 pairs · 8 cards',
-  moderate: '8 pairs · 16 cards',
-  hard: '12 pairs · 24 cards',
+const DIFF_META: Record<Difficulty, { pairs: number; desc: string }> = {
+  easy: { pairs: 4, desc: '4 pairs · 8 cards' },
+  moderate: { pairs: 8, desc: '8 pairs · 16 cards' },
+  hard: { pairs: 12, desc: '12 pairs · 24 cards' },
 };
 
 export default function MatchPage() {
@@ -109,93 +109,93 @@ export default function MatchPage() {
   // Selection screen
   if (!difficulty) {
     return (
-      <main className="flex-1 flex flex-col w-full px-6 sm:px-12 lg:px-24">
-        <nav className="border-b-2 border-black py-5 flex items-center gap-3">
-          <Link href="/" className="text-sm opacity-60 hover:opacity-100 transition-opacity font-black uppercase tracking-widest">← Back</Link>
-          <span className="opacity-20">|</span>
-          <span className="font-black uppercase tracking-widest text-sm">🃏 Memory Match</span>
+      <main className="flex-1 flex flex-col w-full px-6 sm:px-12 lg:px-20">
+        <nav className="py-5 flex items-center gap-4 border-b border-white/5">
+          <Link href="/" className="text-sm text-white/40 hover:text-white/70 transition-colors flex items-center gap-2">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+            Back
+          </Link>
+          <div className="w-px h-4 bg-white/10" />
+          <span className="text-sm font-medium text-white/70">🃏 Memory Match</span>
         </nav>
 
-        <div className="flex-1 flex flex-col justify-center py-8">
-          <div className="border-2 border-black mb-6" style={{ boxShadow: '4px 4px 0 #000' }}>
-            <div className="bg-black text-white px-5 py-3">
-              <span className="font-black uppercase tracking-widest text-xs">Choose Difficulty</span>
-            </div>
-            <div className="p-5">
-              <p className="text-sm opacity-60">Flip cards to find all matching pairs. Test your memory.</p>
-            </div>
+        <div className="flex-1 flex flex-col justify-center py-8 max-w-lg mx-auto w-full">
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold text-white mb-2">Memory Match</h1>
+            <p className="text-sm text-white/40">Flip cards to find all matching pairs. Test your focus.</p>
           </div>
 
-          <div>
-            {(['easy', 'moderate', 'hard'] as Difficulty[]).map((d, i) => (
+          <div className="space-y-3">
+            {(['easy', 'moderate', 'hard'] as Difficulty[]).map((d) => (
               <button
                 key={d}
                 onClick={() => startGame(d)}
-                className={`w-full border-2 border-black p-5 text-left hover:bg-black hover:text-white transition-colors group flex items-center justify-between ${i > 0 ? '-mt-[2px]' : ''}`}
-                style={{ boxShadow: i === 2 ? '4px 4px 0 #000' : undefined }}
+                className="w-full glass glass-hover rounded-xl p-5 text-left flex items-center justify-between group transition-all duration-200"
               >
                 <div>
-                  <div className="font-black uppercase tracking-widest text-base">{d}</div>
-                  <div className="text-xs opacity-50 mt-0.5">{DIFF_INFO[d]}</div>
+                  <div className="font-semibold text-white/90 capitalize text-base">{d}</div>
+                  <div className="text-xs text-white/30 mt-0.5">{DIFF_META[d].desc}</div>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-xl">{CARD_SETS[d].slice(0, 3).join(' ')}</span>
-                  <span className="font-black opacity-30 group-hover:opacity-100 text-lg">→</span>
+                  <span className="text-lg">{CARD_SETS[d].slice(0, 3).join('')}</span>
+                  <svg className="w-5 h-5 text-white/20 group-hover:text-white/50 group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
                 </div>
               </button>
             ))}
           </div>
         </div>
-
-        <footer className="border-t-2 border-black py-5 flex items-center justify-between">
-          <span className="font-black uppercase tracking-widest text-sm">[ UNWIND ]</span>
-          <span className="text-xs opacity-40">Memory Match</span>
-        </footer>
       </main>
     );
   }
 
   // Game screen
   return (
-    <main className="flex-1 flex flex-col w-full px-6 sm:px-12 lg:px-24">
-      <nav className="border-b-2 border-black py-5 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <button onClick={() => { setDifficulty(null); setRunning(false); }} className="text-sm opacity-60 hover:opacity-100 transition-opacity font-black uppercase tracking-widest">← Change</button>
-          <span className="opacity-20">|</span>
-          <span className="font-black uppercase tracking-widest text-sm capitalize">🃏 {difficulty}</span>
+    <main className="flex-1 flex flex-col w-full px-6 sm:px-12 lg:px-20">
+      <nav className="py-5 flex items-center justify-between border-b border-white/5">
+        <div className="flex items-center gap-4">
+          <button onClick={() => { setDifficulty(null); setRunning(false); }} className="text-sm text-white/40 hover:text-white/70 transition-colors flex items-center gap-2">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+            Change
+          </button>
+          <div className="w-px h-4 bg-white/10" />
+          <span className="text-sm font-medium text-white/70 capitalize">🃏 {difficulty}</span>
         </div>
-        <button onClick={() => startGame(difficulty)} className="border-2 border-black px-4 py-2 text-xs font-black uppercase tracking-widest hover:bg-black hover:text-white transition-colors">↺ Restart</button>
+        <button onClick={() => startGame(difficulty)} className="btn-secondary text-xs px-3 py-1.5">↺ Restart</button>
       </nav>
 
       {/* Stats */}
-      <div className="border-b-2 border-black flex">
-        <div className="flex-1 border-r-2 border-black p-4 text-center">
-          <div className="font-black text-2xl">{matchedCount}/{totalPairs}</div>
-          <div className="text-xs uppercase tracking-widest opacity-50">Pairs</div>
+      <div className="flex items-center gap-6 py-4 border-b border-white/5">
+        <div className="text-center">
+          <div className="text-xl font-bold text-white">{matchedCount}/{totalPairs}</div>
+          <div className="text-xs text-white/30">Pairs</div>
         </div>
-        <div className="flex-1 border-r-2 border-black p-4 text-center">
-          <div className="font-black text-2xl">{moves}</div>
-          <div className="text-xs uppercase tracking-widest opacity-50">Moves</div>
+        <div className="w-px h-8 bg-white/10" />
+        <div className="text-center">
+          <div className="text-xl font-bold text-white">{moves}</div>
+          <div className="text-xs text-white/30">Moves</div>
         </div>
-        <div className="flex-1 p-4 text-center">
-          <div className="font-black text-2xl">{fmt(seconds)}</div>
-          <div className="text-xs uppercase tracking-widest opacity-50">Time</div>
+        <div className="w-px h-8 bg-white/10" />
+        <div className="text-center">
+          <div className="text-xl font-bold text-white">{fmt(seconds)}</div>
+          <div className="text-xs text-white/30">Time</div>
         </div>
       </div>
 
       {/* Cards */}
-      <div className="flex-1 flex items-center justify-center py-6 px-2">
+      <div className="flex-1 flex items-center justify-center py-6">
         <div className={`grid ${GRID[difficulty]} gap-2 sm:gap-3 w-full max-w-md`}>
           {cards.map(card => (
             <button
               key={card.id}
               onClick={() => handleCardClick(card.id)}
-              className={`aspect-square text-2xl sm:text-3xl flex items-center justify-center transition-all border-2
+              className={`aspect-square text-2xl sm:text-3xl flex items-center justify-center transition-all duration-200 rounded-xl border
                 ${card.matched
-                  ? 'bg-black border-black text-white match-pop'
+                  ? 'bg-violet-500/20 border-violet-500/30 match-pop'
                   : card.flipped
-                  ? 'bg-white border-black flip-in'
-                  : 'bg-white border-black opacity-30 hover:opacity-60 cursor-pointer'
+                  ? 'bg-white/10 border-white/20 flip-in'
+                  : 'bg-white/[0.03] border-white/[0.06] hover:bg-white/[0.06] hover:border-white/10 cursor-pointer'
                 }`}
             >
               {card.flipped || card.matched ? card.emoji : ''}
@@ -206,19 +206,19 @@ export default function MatchPage() {
 
       {/* Solved */}
       {solved && (
-        <div className="fade-in border-t-2 border-black">
-          <div className="bg-black text-white px-6 py-4 text-center">
-            <div className="text-3xl mb-1">✨</div>
-            <div className="font-black text-xl uppercase tracking-widest">All Pairs Found!</div>
-            <div className="text-xs opacity-60 mt-1">{moves} moves · {fmt(seconds)}</div>
-          </div>
-          <div className="p-5 flex gap-3">
-            <button onClick={() => startGame(difficulty)} className="flex-1 bg-black text-white border-2 border-black py-3 font-black uppercase tracking-widest text-sm hover:bg-white hover:text-black transition-colors">
-              Play Again
-            </button>
-            <button onClick={() => setDifficulty(null)} className="flex-1 border-2 border-black py-3 font-black uppercase tracking-widest text-sm hover:bg-black hover:text-white transition-colors">
-              Change Mode
-            </button>
+        <div className="fade-up pb-8">
+          <div className="glass rounded-2xl p-8 text-center max-w-sm mx-auto glow-blue">
+            <div className="text-4xl mb-3">✨</div>
+            <div className="text-xl font-bold text-white mb-1">All Pairs Found!</div>
+            <div className="text-sm text-white/40 mb-6">{moves} moves · {fmt(seconds)}</div>
+            <div className="flex gap-3">
+              <button onClick={() => startGame(difficulty)} className="btn-primary flex-1 py-3 text-sm rounded-xl">
+                Play Again
+              </button>
+              <button onClick={() => setDifficulty(null)} className="btn-secondary flex-1 py-3 text-sm rounded-xl">
+                Change Mode
+              </button>
+            </div>
           </div>
         </div>
       )}

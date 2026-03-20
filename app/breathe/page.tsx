@@ -9,6 +9,7 @@ const EXERCISES = [
     name: 'Box Breathing',
     description: 'Used by Navy SEALs to stay calm under pressure.',
     emoji: '⬜',
+    color: 'violet',
     phases: [
       { label: 'Inhale', duration: 4 },
       { label: 'Hold', duration: 4 },
@@ -21,6 +22,7 @@ const EXERCISES = [
     name: '4-7-8 Breathing',
     description: 'A natural tranquilizer for the nervous system.',
     emoji: '🌙',
+    color: 'blue',
     phases: [
       { label: 'Inhale', duration: 4 },
       { label: 'Hold', duration: 7 },
@@ -32,6 +34,7 @@ const EXERCISES = [
     name: 'Calm Breath',
     description: 'Simple slow breathing to reduce anxiety instantly.',
     emoji: '🌊',
+    color: 'emerald',
     phases: [
       { label: 'Inhale', duration: 5 },
       { label: 'Exhale', duration: 6 },
@@ -40,6 +43,24 @@ const EXERCISES = [
 ];
 
 type Exercise = typeof EXERCISES[0];
+
+const GLOW: Record<string, string> = {
+  violet: '0 0 80px rgba(167,139,250,0.15), 0 0 30px rgba(167,139,250,0.1)',
+  blue: '0 0 80px rgba(96,165,250,0.15), 0 0 30px rgba(96,165,250,0.1)',
+  emerald: '0 0 80px rgba(52,211,153,0.15), 0 0 30px rgba(52,211,153,0.1)',
+};
+
+const RING_COLOR: Record<string, string> = {
+  violet: 'rgba(167,139,250,0.3)',
+  blue: 'rgba(96,165,250,0.3)',
+  emerald: 'rgba(52,211,153,0.3)',
+};
+
+const BADGE_STYLE: Record<string, string> = {
+  violet: 'bg-violet-500/20 text-violet-300 border-violet-500/20',
+  blue: 'bg-blue-500/20 text-blue-300 border-blue-500/20',
+  emerald: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/20',
+};
 
 export default function BreathePage() {
   const [selected, setSelected] = useState<Exercise | null>(null);
@@ -132,55 +153,50 @@ export default function BreathePage() {
   // Selection screen
   if (!selected) {
     return (
-      <main className="flex-1 flex flex-col w-full px-6 sm:px-12 lg:px-24">
-        <nav className="border-b-2 border-black py-5 flex items-center gap-3">
-          <Link href="/" className="text-sm opacity-60 hover:opacity-100 transition-opacity font-black uppercase tracking-widest">← Back</Link>
-          <span className="opacity-20">|</span>
-          <span className="font-black uppercase tracking-widest text-sm">🫁 Just Breathe</span>
+      <main className="flex-1 flex flex-col w-full px-6 sm:px-12 lg:px-20">
+        <nav className="py-5 flex items-center gap-4 border-b border-white/5">
+          <Link href="/" className="text-sm text-white/40 hover:text-white/70 transition-colors flex items-center gap-2">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+            Back
+          </Link>
+          <div className="w-px h-4 bg-white/10" />
+          <span className="text-sm font-medium text-white/70">🌬️ Just Breathe</span>
         </nav>
 
-        <div className="flex-1 flex flex-col justify-center py-8">
-          <div className="border-2 border-black mb-6" style={{ boxShadow: '4px 4px 0 #000' }}>
-            <div className="bg-black text-white px-5 py-3">
-              <span className="font-black uppercase tracking-widest text-xs">Choose Technique</span>
-            </div>
-            <div className="p-5">
-              <p className="text-sm opacity-60">Guided breathing to calm your nervous system. 4 cycles per session.</p>
-            </div>
+        <div className="flex-1 flex flex-col justify-center py-8 max-w-lg mx-auto w-full">
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold text-white mb-2">Just Breathe</h1>
+            <p className="text-sm text-white/40">Guided breathing to calm your nervous system. 4 cycles per session.</p>
           </div>
 
-          <div>
-            {EXERCISES.map((ex, i) => (
+          <div className="space-y-3">
+            {EXERCISES.map((ex) => (
               <button
                 key={ex.id}
                 onClick={() => startExercise(ex)}
-                className={`w-full border-2 border-black p-5 text-left hover:bg-black hover:text-white transition-colors group ${i > 0 ? '-mt-[2px]' : ''}`}
-                style={{ boxShadow: i === EXERCISES.length - 1 ? '4px 4px 0 #000' : undefined }}
+                className="w-full glass glass-hover rounded-xl p-5 text-left group transition-all duration-200"
               >
                 <div className="flex items-start gap-4">
-                  <div className="text-3xl flex-shrink-0">{ex.emoji}</div>
+                  <div className="text-2xl flex-shrink-0 mt-0.5">{ex.emoji}</div>
                   <div className="flex-1">
-                    <div className="font-black uppercase tracking-widest text-base">{ex.name}</div>
-                    <div className="text-xs opacity-50 mt-0.5 mb-2">{ex.description}</div>
+                    <div className="font-semibold text-white/90">{ex.name}</div>
+                    <div className="text-xs text-white/30 mt-0.5 mb-3">{ex.description}</div>
                     <div className="flex gap-2 flex-wrap">
                       {ex.phases.map((p, pi) => (
-                        <span key={pi} className="text-xs border border-current px-2 py-0.5 opacity-50 group-hover:opacity-80">
+                        <span key={pi} className="text-xs px-2 py-0.5 rounded-full bg-white/5 text-white/30 border border-white/5">
                           {p.label} {p.duration}s
                         </span>
                       ))}
                     </div>
                   </div>
-                  <span className="font-black opacity-30 group-hover:opacity-100 mt-1 text-lg">→</span>
+                  <svg className="w-5 h-5 text-white/20 group-hover:text-white/50 group-hover:translate-x-1 transition-all mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                  </svg>
                 </div>
               </button>
             ))}
           </div>
         </div>
-
-        <footer className="border-t-2 border-black py-5 flex items-center justify-between">
-          <span className="font-black uppercase tracking-widest text-sm">[ UNWIND ]</span>
-          <span className="text-xs opacity-40">Just Breathe</span>
-        </footer>
       </main>
     );
   }
@@ -189,25 +205,28 @@ export default function BreathePage() {
   const cycleProgress = (cycles / targetCycles) * 100;
 
   return (
-    <main className="flex-1 flex flex-col w-full px-6 sm:px-12 lg:px-24">
-      <nav className="border-b-2 border-black py-5 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <button onClick={() => { setSelected(null); setRunning(false); }} className="text-sm opacity-60 hover:opacity-100 transition-opacity font-black uppercase tracking-widest">← Change</button>
-          <span className="opacity-20">|</span>
-          <span className="font-black uppercase tracking-widest text-sm">{selected.emoji} {selected.name}</span>
+    <main className="flex-1 flex flex-col w-full px-6 sm:px-12 lg:px-20">
+      <nav className="py-5 flex items-center justify-between border-b border-white/5">
+        <div className="flex items-center gap-4">
+          <button onClick={() => { setSelected(null); setRunning(false); }} className="text-sm text-white/40 hover:text-white/70 transition-colors flex items-center gap-2">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+            Change
+          </button>
+          <div className="w-px h-4 bg-white/10" />
+          <span className="text-sm font-medium text-white/70">{selected.emoji} {selected.name}</span>
         </div>
-        <button onClick={restart} className="border-2 border-black px-4 py-2 text-xs font-black uppercase tracking-widest hover:bg-black hover:text-white transition-colors">↺ Restart</button>
+        <button onClick={restart} className="btn-secondary text-xs px-3 py-1.5">↺ Restart</button>
       </nav>
 
       {/* Progress */}
-      <div className="border-b-2 border-black px-4 py-4">
-        <div className="flex justify-between text-xs uppercase tracking-widest opacity-50 mb-2 font-black">
+      <div className="py-4 border-b border-white/5">
+        <div className="flex justify-between text-xs text-white/30 mb-2">
           <span>Cycle {Math.min(cycles + (running ? 1 : 0), targetCycles)} of {targetCycles}</span>
           <span>{fmt(totalSeconds)}</span>
         </div>
-        <div className="w-full h-1.5 bg-gray-100 overflow-hidden border border-black">
+        <div className="w-full h-1 rounded-full bg-white/5 overflow-hidden">
           <div
-            className="h-full bg-black transition-all duration-1000"
+            className="h-full rounded-full bg-gradient-to-r from-violet-500 to-blue-500 transition-all duration-1000"
             style={{ width: `${cycleProgress}%` }}
           />
         </div>
@@ -215,37 +234,43 @@ export default function BreathePage() {
 
       {/* Circle */}
       <div className="flex-1 flex flex-col items-center justify-center py-8">
-        <div className="relative flex items-center justify-center mb-8" style={{ width: 260, height: 260 }}>
-          {/* Outer ring */}
+        <div className="relative flex items-center justify-center mb-8" style={{ width: 280, height: 280 }}>
+          {/* Outer glow ring */}
           <div
-            className="absolute border-2 border-black transition-all duration-1000"
+            className="absolute rounded-full transition-all duration-1000"
             style={{
-              width: 260 * circleScale,
-              height: 260 * circleScale,
-              borderRadius: '50%',
-              opacity: running ? 0.15 : 0.08,
+              width: 280 * circleScale,
+              height: 280 * circleScale,
+              border: `1px solid ${RING_COLOR[selected.color]}`,
+              opacity: running ? 0.5 : 0.2,
             }}
           />
           {/* Main circle */}
           <div
-            className="border-2 border-black flex items-center justify-center transition-all duration-1000 bg-white"
-            style={{ width: 210 * circleScale, height: 210 * circleScale, borderRadius: '50%' }}
+            className="rounded-full flex items-center justify-center transition-all duration-1000"
+            style={{
+              width: 220 * circleScale,
+              height: 220 * circleScale,
+              background: 'rgba(255,255,255,0.03)',
+              border: `1px solid ${RING_COLOR[selected.color]}`,
+              boxShadow: running ? GLOW[selected.color] : 'none',
+            }}
           >
             <div className="text-center px-4">
               {done ? (
                 <>
                   <div className="text-4xl mb-2">✨</div>
-                  <div className="font-black text-sm uppercase tracking-widest">Done!</div>
+                  <div className="text-sm font-semibold text-white/70">Complete</div>
                 </>
               ) : !running ? (
                 <>
                   <div className="text-4xl mb-2">{selected.emoji}</div>
-                  <div className="text-xs uppercase tracking-widest opacity-40 font-black">{cycles === 0 ? 'Tap Start' : 'Paused'}</div>
+                  <div className="text-xs text-white/30">{cycles === 0 ? 'Tap Start' : 'Paused'}</div>
                 </>
               ) : (
                 <>
-                  <div className="font-black text-lg uppercase tracking-widest">{currentPhase.label}</div>
-                  <div className="font-black text-6xl leading-none mt-1">
+                  <div className="text-sm font-medium text-white/50 mb-1">{currentPhase.label}</div>
+                  <div className="text-5xl font-bold text-white leading-none">
                     {currentPhase.duration - phaseSeconds}
                   </div>
                 </>
@@ -259,10 +284,10 @@ export default function BreathePage() {
           {selected.phases.map((p, i) => (
             <div
               key={i}
-              className={`text-xs px-3 py-1.5 border-2 uppercase tracking-widest font-black transition-all ${
+              className={`text-xs px-3 py-1.5 rounded-full border transition-all duration-300 ${
                 i === phaseIdx && running
-                  ? 'bg-black text-white border-black'
-                  : 'border-black opacity-20'
+                  ? BADGE_STYLE[selected.color]
+                  : 'bg-white/[0.02] border-white/5 text-white/20'
               }`}
             >
               {p.label} {p.duration}s
@@ -274,25 +299,22 @@ export default function BreathePage() {
         {!done ? (
           <button
             onClick={toggleRunning}
-            className="bg-black text-white border-2 border-black px-16 py-4 font-black uppercase tracking-widest text-base hover:bg-white hover:text-black transition-colors"
-            style={{ boxShadow: '4px 4px 0 #000' }}
+            className="btn-primary px-16 py-4 text-base rounded-xl"
           >
             {running ? 'Pause' : cycles === 0 ? 'Start' : 'Resume'}
           </button>
         ) : (
-          <div className="text-center fade-in w-full max-w-sm">
-            <div className="border-2 border-black mb-4" style={{ boxShadow: '4px 4px 0 #000' }}>
-              <div className="bg-black text-white px-6 py-4 text-center">
-                <div className="text-3xl mb-1">🌿</div>
-                <div className="font-black uppercase tracking-widest">Session Complete</div>
-                <div className="text-xs opacity-60 mt-1">{targetCycles} cycles · {fmt(totalSeconds)}</div>
-              </div>
+          <div className="text-center fade-up w-full max-w-sm">
+            <div className="glass rounded-2xl p-8 text-center glow-green mb-4">
+              <div className="text-4xl mb-3">🌿</div>
+              <div className="text-xl font-bold text-white mb-1">Session Complete</div>
+              <div className="text-sm text-white/40">{targetCycles} cycles · {fmt(totalSeconds)}</div>
             </div>
             <div className="flex gap-3">
-              <button onClick={restart} className="flex-1 bg-black text-white border-2 border-black py-3 font-black uppercase tracking-widest text-sm hover:bg-white hover:text-black transition-colors">
+              <button onClick={restart} className="btn-primary flex-1 py-3 text-sm rounded-xl">
                 Go Again
               </button>
-              <button onClick={() => setSelected(null)} className="flex-1 border-2 border-black py-3 font-black uppercase tracking-widest text-sm hover:bg-black hover:text-white transition-colors">
+              <button onClick={() => setSelected(null)} className="btn-secondary flex-1 py-3 text-sm rounded-xl">
                 Change
               </button>
             </div>
@@ -300,8 +322,8 @@ export default function BreathePage() {
         )}
 
         {!running && !done && cycles === 0 && (
-          <p className="text-xs opacity-30 uppercase tracking-widest mt-6 text-center font-black">
-            Find a comfortable position first
+          <p className="text-xs text-white/20 mt-6 text-center">
+            Find a comfortable position and focus on your breath
           </p>
         )}
       </div>
