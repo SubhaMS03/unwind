@@ -109,7 +109,7 @@ export default function MatchPage() {
   // Selection screen
   if (!difficulty) {
     return (
-      <main className="flex-1 flex flex-col w-full max-w-2xl mx-auto px-4">
+      <main className="flex-1 flex flex-col w-full px-6 sm:px-12 lg:px-24">
         <nav className="border-b-2 border-black py-5 flex items-center gap-3">
           <Link href="/" className="text-sm opacity-60 hover:opacity-100 transition-opacity font-black uppercase tracking-widest">← Back</Link>
           <span className="opacity-20">|</span>
@@ -157,7 +157,7 @@ export default function MatchPage() {
 
   // Game screen
   return (
-    <main className="flex-1 flex flex-col w-full max-w-2xl mx-auto px-4">
+    <main className="flex-1 flex flex-col w-full px-6 sm:px-12 lg:px-24">
       <nav className="border-b-2 border-black py-5 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <button onClick={() => { setDifficulty(null); setRunning(false); }} className="text-sm opacity-60 hover:opacity-100 transition-opacity font-black uppercase tracking-widest">← Change</button>
