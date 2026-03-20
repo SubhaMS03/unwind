@@ -127,7 +127,7 @@ export function Providers({ children }: { children: ReactNode }) {
       {/* Mute toggle — fixed bottom-right */}
       <button
         onClick={toggleMute}
-        className="fixed bottom-6 right-6 z-[100] w-10 h-10 rounded-full bg-white/[0.06] backdrop-blur-md border border-white/[0.1] flex items-center justify-center text-white/40 hover:text-white hover:bg-white/[0.1] transition-all"
+        className="fixed bottom-6 right-6 z-[100] w-10 h-10 rounded-full bg-white border border-[#EBE8E4] shadow-sm flex items-center justify-center text-[#8B8680] hover:text-[#2D2A26] hover:shadow-md transition-all"
         aria-label={muted ? 'Unmute' : 'Mute'}
       >
         {muted ? (

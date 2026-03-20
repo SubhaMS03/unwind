@@ -19,8 +19,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         minHeight: '100%',
         display: 'flex',
         flexDirection: 'column',
-        background: '#0F0B15',
-        color: '#F0ECE7',
+        background: '#F9F7F4',
+        color: '#2D2A26',
         fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
         WebkitFontSmoothing: 'antialiased',
       }}>
