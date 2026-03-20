@@ -136,52 +136,51 @@ export default function SlidePage() {
 
   if (!difficulty) {
     return (
-      <div style={{ minHeight: '100vh', width: '100%' }} className="flex flex-col">
-        <div className="flex-1 flex flex-col items-center px-4 pt-8 pb-8">
-          <div className="w-full max-w-lg">
-            <nav className="flex items-center gap-3 mb-8">
-              <Link href="/" className="glass rounded-full px-4 py-2 text-sm text-gray-500 hover:text-gray-800 transition-colors shadow-sm">← Back</Link>
-              <span className="font-semibold text-gray-700">🧩 Slide Puzzle</span>
-            </nav>
+      <div className="min-h-screen w-full flex flex-col items-center">
+        <div className="w-full max-w-lg px-6">
+          <nav className="py-5 flex items-center gap-3 border-b border-gray-100">
+            <Link href="/" className="text-sm text-gray-400 hover:text-gray-800 transition-colors">← Back</Link>
+            <span className="text-gray-200">|</span>
+            <span className="font-semibold text-sm">🧩 Slide Puzzle</span>
+          </nav>
 
-            <h1 className="font-display text-4xl font-bold mb-2 text-gray-800">Choose your scene</h1>
-            <p className="text-gray-400 text-sm mb-8">Pick an image, pick a difficulty, and begin.</p>
+          <div className="pt-10 pb-4">
+            <h1 className="text-3xl font-extrabold tracking-tight mb-1">Choose your scene</h1>
+            <p className="text-gray-400 text-sm">Pick an image and a difficulty to begin.</p>
+          </div>
 
-            {/* Image picker */}
-            <div className="mb-8">
-              <div className="text-sm font-semibold text-gray-500 mb-3 uppercase tracking-wider">Image</div>
-              <div className="grid grid-cols-3 gap-3">
-                {IMAGES.map((img, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setImageIdx(i)}
-                    className={`aspect-square rounded-2xl overflow-hidden border-3 transition-all shadow-sm hover:shadow-md ${imageIdx === i ? 'ring-3 ring-emerald-400 scale-105 shadow-emerald-200' : 'opacity-70 hover:opacity-100'}`}
-                    style={{ backgroundImage: `url(${img.url})`, backgroundSize: 'cover', backgroundPosition: 'center', border: imageIdx === i ? '3px solid #34d399' : '3px solid transparent' }}
-                    title={img.label}
-                  />
-                ))}
-              </div>
-              <p className="text-xs text-gray-400 mt-3 text-center font-medium">{IMAGES[imageIdx].label}</p>
-            </div>
-
-            <div className="text-sm font-semibold text-gray-500 mb-3 uppercase tracking-wider">Difficulty</div>
-            <div className="space-y-3">
-              {DIFFICULTIES.map(d => (
+          {/* Image picker */}
+          <div className="mt-8 mb-8">
+            <div className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">Image</div>
+            <div className="grid grid-cols-3 gap-2">
+              {IMAGES.map((img, i) => (
                 <button
-                  key={d.label}
-                  onClick={() => startGame(d)}
-                  className="w-full glass rounded-2xl p-5 text-left hover:shadow-md hover:shadow-emerald-100 transition-all group border border-white/80 hover:border-emerald-200"
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <div className="font-bold text-lg text-gray-700 group-hover:text-emerald-700">{d.label}</div>
-                      <div className="text-xs text-gray-400 mt-0.5">{d.desc}</div>
-                    </div>
-                    <span className="text-gray-300 group-hover:text-emerald-400 text-xl">→</span>
-                  </div>
-                </button>
+                  key={i}
+                  onClick={() => setImageIdx(i)}
+                  className={`aspect-square rounded-xl overflow-hidden transition-all ${imageIdx === i ? 'ring-2 ring-black scale-105' : 'opacity-50 hover:opacity-80'}`}
+                  style={{ backgroundImage: `url(${img.url})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+                  title={img.label}
+                />
               ))}
             </div>
+            <p className="text-xs text-gray-400 mt-2 text-center">{IMAGES[imageIdx].label}</p>
+          </div>
+
+          <div className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">Difficulty</div>
+          <div className="space-y-2 pb-10">
+            {DIFFICULTIES.map(d => (
+              <button
+                key={d.label}
+                onClick={() => startGame(d)}
+                className="w-full border border-gray-100 rounded-xl p-4 text-left hover:border-gray-300 hover:bg-gray-50 transition-all group flex items-center justify-between"
+              >
+                <div>
+                  <div className="font-semibold text-gray-900">{d.label}</div>
+                  <div className="text-xs text-gray-400 mt-0.5">{d.desc}</div>
+                </div>
+                <span className="text-gray-300 group-hover:text-gray-600 transition-colors">→</span>
+              </button>
+            ))}
           </div>
         </div>
       </div>
@@ -189,115 +188,106 @@ export default function SlidePage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', width: '100%' }} className="flex flex-col">
-      <div className="flex-1 flex flex-col items-center px-4 pt-6 pb-8">
-        <div className="w-full max-w-lg">
-          <nav className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-3">
-              <button onClick={() => { setDifficulty(null); setRunning(false); }} className="glass rounded-full px-4 py-2 text-sm text-gray-500 hover:text-gray-800 transition-colors shadow-sm">← Change</button>
-              <span className="font-semibold text-gray-700 text-sm">🧩 {difficulty.label} · {image.label}</span>
-            </div>
-            <button
-              onClick={() => setShowPreview(v => !v)}
-              className="glass text-xs px-4 py-2 rounded-full text-gray-500 hover:text-gray-800 shadow-sm transition-colors"
-            >
-              {showPreview ? 'Hide' : 'Peek'} 👁
-            </button>
-          </nav>
-
-          {/* Stats */}
-          <div className="glass rounded-2xl p-4 flex items-center justify-around mb-5 shadow-sm border border-white/80">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-gray-700">{moves}</div>
-              <div className="text-xs text-gray-400 mt-0.5">moves</div>
-            </div>
-            <div className="w-px h-8 bg-gray-200" />
-            <div className="text-center">
-              <div className="text-2xl font-bold text-gray-700">{fmt(seconds)}</div>
-              <div className="text-xs text-gray-400 mt-0.5">time</div>
-            </div>
-            <div className="w-px h-8 bg-gray-200" />
-            <button
-              onClick={() => startGame(difficulty)}
-              className="text-xs font-medium text-emerald-600 hover:text-emerald-700 transition-colors"
-            >
-              ↺ Restart
-            </button>
+    <div className="min-h-screen w-full flex flex-col items-center">
+      <div className="w-full max-w-lg px-6">
+        <nav className="py-5 flex items-center justify-between border-b border-gray-100">
+          <div className="flex items-center gap-3">
+            <button onClick={() => { setDifficulty(null); setRunning(false); }} className="text-sm text-gray-400 hover:text-gray-800 transition-colors">← Change</button>
+            <span className="text-gray-200">|</span>
+            <span className="font-semibold text-sm">🧩 {difficulty.label} · {image.label}</span>
           </div>
+          <button onClick={() => setShowPreview(v => !v)} className="text-xs text-gray-400 hover:text-gray-700 transition-colors border border-gray-100 px-3 py-1.5 rounded-full hover:border-gray-300">
+            {showPreview ? 'Hide' : 'Peek'} image
+          </button>
+        </nav>
 
-          {/* Preview */}
-          {showPreview && (
-            <div className="mb-4 rounded-2xl overflow-hidden shadow-md fade-in">
-              <img src={image.url} alt={image.label} className="w-full object-cover" style={{ maxHeight: 200 }} />
-            </div>
-          )}
-
-          {/* Board */}
-          <div className="flex justify-center mb-5">
-            <div
-              className="relative rounded-2xl overflow-hidden shadow-xl"
-              style={{ width: boardPx, height: boardPx, border: '3px solid rgba(255,255,255,0.8)' }}
-            >
-              {board.map((tile, idx) => {
-                if (tile === 0) return (
-                  <div
-                    key="empty"
-                    className="absolute"
-                    style={{
-                      width: tileSize,
-                      height: tileSize,
-                      left: (idx % size) * tileSize,
-                      top: Math.floor(idx / size) * tileSize,
-                      backgroundColor: 'rgba(0,0,0,0.15)',
-                    }}
-                  />
-                );
-                const origRow = Math.floor((tile - 1) / size);
-                const origCol = (tile - 1) % size;
-                return (
-                  <div
-                    key={tile}
-                    className={`absolute tile ${slideAnim === idx ? 'tile-slide' : ''} ${solved ? 'win-glow' : ''}`}
-                    style={{
-                      width: tileSize - 2,
-                      height: tileSize - 2,
-                      left: (idx % size) * tileSize + 1,
-                      top: Math.floor(idx / size) * tileSize + 1,
-                      backgroundImage: `url(${image.url})`,
-                      backgroundSize: `${boardPx}px ${boardPx}px`,
-                      backgroundPosition: `-${origCol * tileSize}px -${origRow * tileSize}px`,
-                      borderRadius: 4,
-                      transition: 'left 0.12s ease, top 0.12s ease',
-                    }}
-                    onClick={() => handleTileClick(idx)}
-                    onTouchStart={e => handleTouchStart(e, idx)}
-                  />
-                );
-              })}
-            </div>
+        {/* Stats */}
+        <div className="flex items-center justify-between py-5 border-b border-gray-100">
+          <div className="text-center">
+            <div className="text-2xl font-bold">{moves}</div>
+            <div className="text-xs text-gray-400 mt-0.5">moves</div>
           </div>
-
-          {/* Solved state */}
-          {solved && (
-            <div className="text-center fade-in glass rounded-3xl p-6 shadow-lg border border-emerald-200">
-              <div className="text-4xl mb-3 float">🎉</div>
-              <div className="font-display font-bold text-2xl text-emerald-700 mb-1">Puzzle Complete!</div>
-              <div className="text-sm text-gray-400 mb-5">{moves} moves · {fmt(seconds)}</div>
-              <div className="flex gap-3 justify-center">
-                <button onClick={() => startGame(difficulty)} className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2.5 rounded-full text-sm font-semibold transition-colors shadow-md">
-                  Play Again
-                </button>
-                <button onClick={() => setDifficulty(null)} className="glass px-6 py-2.5 rounded-full text-sm text-gray-600 hover:text-gray-800 transition-colors shadow-sm">
-                  Change Mode
-                </button>
-              </div>
-            </div>
-          )}
-
-          {!solved && (
-            <p className="text-center text-xs text-gray-300 mt-2">Tap a tile next to the empty space to slide it</p>
-          )}
+          <div className="text-center">
+            <div className="text-2xl font-bold">{fmt(seconds)}</div>
+            <div className="text-xs text-gray-400 mt-0.5">time</div>
+          </div>
+          <button onClick={() => startGame(difficulty)} className="text-xs border border-gray-200 px-4 py-1.5 rounded-full hover:bg-gray-50 transition-colors">
+            ↺ Restart
+          </button>
         </div>
+
+        {/* Preview */}
+        {showPreview && (
+          <div className="mt-4 rounded-xl overflow-hidden fade-in">
+            <img src={image.url} alt={image.label} className="w-full object-cover" style={{ maxHeight: 180 }} />
+          </div>
+        )}
+
+        {/* Board */}
+        <div className="flex justify-center py-6">
+          <div
+            className="relative rounded-xl overflow-hidden"
+            style={{ width: boardPx, height: boardPx, border: '2px solid #e5e7eb' }}
+          >
+            {board.map((tile, idx) => {
+              if (tile === 0) return (
+                <div
+                  key="empty"
+                  className="absolute"
+                  style={{
+                    width: tileSize,
+                    height: tileSize,
+                    left: (idx % size) * tileSize,
+                    top: Math.floor(idx / size) * tileSize,
+                    backgroundColor: '#f3f4f6',
+                  }}
+                />
+              );
+              const origRow = Math.floor((tile - 1) / size);
+              const origCol = (tile - 1) % size;
+              return (
+                <div
+                  key={tile}
+                  className={`absolute tile ${slideAnim === idx ? 'tile-slide' : ''} ${solved ? 'win-glow' : ''}`}
+                  style={{
+                    width: tileSize - 2,
+                    height: tileSize - 2,
+                    left: (idx % size) * tileSize + 1,
+                    top: Math.floor(idx / size) * tileSize + 1,
+                    backgroundImage: `url(${image.url})`,
+                    backgroundSize: `${boardPx}px ${boardPx}px`,
+                    backgroundPosition: `-${origCol * tileSize}px -${origRow * tileSize}px`,
+                    borderRadius: 4,
+                    transition: 'left 0.12s ease, top 0.12s ease',
+                  }}
+                  onClick={() => handleTileClick(idx)}
+                  onTouchStart={e => handleTouchStart(e, idx)}
+                />
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Solved */}
+        {solved && (
+          <div className="fade-in border border-gray-200 rounded-2xl p-6 mb-6 text-center">
+            <div className="text-4xl mb-3">🎉</div>
+            <div className="font-extrabold text-xl mb-1">Puzzle Complete!</div>
+            <div className="text-sm text-gray-400 mb-5">{moves} moves · {fmt(seconds)}</div>
+            <div className="flex gap-3 justify-center">
+              <button onClick={() => startGame(difficulty)} className="bg-black text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-gray-800 transition-colors">
+                Play Again
+              </button>
+              <button onClick={() => setDifficulty(null)} className="border border-gray-200 px-6 py-2.5 rounded-full text-sm text-gray-600 hover:bg-gray-50 transition-colors">
+                Change Mode
+              </button>
+            </div>
+          </div>
+        )}
+
+        {!solved && (
+          <p className="text-center text-xs text-gray-300 pb-6">Tap a tile next to the empty space to slide it</p>
+        )}
       </div>
     </div>
   );
