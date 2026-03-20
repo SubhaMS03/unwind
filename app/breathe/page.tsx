@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { motion, AnimatePresence } from 'motion/react';
+import { useSound } from '@/app/hooks/useSound';
 
 const EXERCISES = [
   { id: 'box', name: 'Box Breathing', description: 'Used by Navy SEALs to stay calm under pressure.', emoji: '⬜', color: '#7C5CBF', phases: [{ label: 'Inhale', duration: 4 }, { label: 'Hold', duration: 4 }, { label: 'Exhale', duration: 4 }, { label: 'Hold', duration: 4 }] },
@@ -21,8 +23,16 @@ export default function BreathePage() {
   const [done, setDone] = useState(false);
   const [targetCycles] = useState(4);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const { playClick, playChime, startAmbient, stopAmbient } = useSound();
 
   useEffect(() => { return () => { if (timerRef.current) clearInterval(timerRef.current); }; }, []);
+
+  // Ambient sound lifecycle
+  useEffect(() => {
+    if (selected && running) startAmbient();
+    else stopAmbient();
+    return () => stopAmbient();
+  }, [selected, running, startAmbient, stopAmbient]);
 
   useEffect(() => {
     if (!running || !selected) return;
@@ -33,18 +43,18 @@ export default function BreathePage() {
         if (next >= phaseDuration) {
           const nextPhaseIdx = (phaseIdx + 1) % selected.phases.length;
           setPhaseIdx(nextPhaseIdx);
-          if (nextPhaseIdx === 0) { setCycles(c => { const nc = c + 1; if (nc >= targetCycles) { setRunning(false); setDone(true); } return nc; }); }
+          if (nextPhaseIdx === 0) { setCycles(c => { const nc = c + 1; if (nc >= targetCycles) { setRunning(false); setDone(true); playChime(); } return nc; }); }
           setTotalSeconds(s => s + 1); return 0;
         }
         setTotalSeconds(s => s + 1); return next;
       });
     }, 1000);
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
-  }, [running, selected, phaseIdx, targetCycles]);
+  }, [running, selected, phaseIdx, targetCycles, playChime]);
 
-  const startExercise = (ex: Exercise) => { setSelected(ex); setRunning(false); setPhaseIdx(0); setPhaseSeconds(0); setCycles(0); setTotalSeconds(0); setDone(false); };
-  const toggleRunning = () => { if (done) return; setRunning(r => !r); };
-  const restart = () => { if (timerRef.current) clearInterval(timerRef.current); setPhaseIdx(0); setPhaseSeconds(0); setCycles(0); setTotalSeconds(0); setDone(false); setRunning(false); };
+  const startExercise = (ex: Exercise) => { playClick(); setSelected(ex); setRunning(false); setPhaseIdx(0); setPhaseSeconds(0); setCycles(0); setTotalSeconds(0); setDone(false); };
+  const toggleRunning = () => { if (done) return; playClick(); setRunning(r => !r); };
+  const restart = () => { playClick(); if (timerRef.current) clearInterval(timerRef.current); setPhaseIdx(0); setPhaseSeconds(0); setCycles(0); setTotalSeconds(0); setDone(false); setRunning(false); };
   const fmt = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 
   const getCircleScale = () => {
@@ -74,14 +84,23 @@ export default function BreathePage() {
         </nav>
         <div className="flex-1 flex flex-col items-center justify-center py-16 relative z-10">
           <div className="max-w-md w-full px-6">
-            <div className="text-center mb-10">
+            <motion.div className="text-center mb-10" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "spring", stiffness: 100, damping: 20 }}>
               <div className="text-5xl mb-5">🧘‍♀️</div>
               <h1 className="text-3xl font-bold text-white mb-2">Just Breathe</h1>
               <p className="text-sm text-white/40">Guided breathing · 4 cycles per session</p>
-            </div>
+            </motion.div>
             <div className="space-y-3">
-              {EXERCISES.map((ex) => (
-                <button key={ex.id} onClick={() => startExercise(ex)} className="w-full rounded-2xl p-5 bg-white/[0.04] backdrop-blur-md border border-white/[0.08] hover:bg-white/[0.08] hover:border-white/[0.15] text-left group transition-all duration-200">
+              {EXERCISES.map((ex, i) => (
+                <motion.button
+                  key={ex.id}
+                  onClick={() => startExercise(ex)}
+                  className="w-full rounded-2xl p-5 bg-white/[0.04] backdrop-blur-md border border-white/[0.08] hover:bg-white/[0.08] hover:border-white/[0.15] text-left group transition-colors duration-200"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1, type: "spring", stiffness: 100, damping: 20 }}
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.98 }}
+                >
                   <div className="flex items-start gap-4">
                     <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl bg-white/[0.06]">{ex.emoji}</div>
                     <div className="flex-1">
@@ -95,7 +114,7 @@ export default function BreathePage() {
                     </div>
                     <svg className="w-5 h-5 text-white/20 group-hover:text-[#C4A8FF] group-hover:translate-x-0.5 transition-all mt-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
                   </div>
-                </button>
+                </motion.button>
               ))}
             </div>
           </div>
@@ -132,7 +151,7 @@ export default function BreathePage() {
             <span>{fmt(totalSeconds)}</span>
           </div>
           <div className="w-full h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
-            <div className="h-full rounded-full transition-all duration-1000" style={{ width: `${cycleProgress}%`, backgroundColor: selected.color }} />
+            <motion.div className="h-full rounded-full" style={{ backgroundColor: selected.color }} animate={{ width: `${cycleProgress}%` }} transition={{ duration: 0.5 }} />
           </div>
         </div>
       </div>
@@ -140,40 +159,83 @@ export default function BreathePage() {
       {/* Circle */}
       <div className="flex-1 flex flex-col items-center justify-center py-8 relative z-10">
         <div className="relative flex items-center justify-center mb-8" style={{ width: 260, height: 260 }}>
-          <div className="absolute rounded-full transition-all duration-1000" style={{ width: 260 * circleScale, height: 260 * circleScale, border: `1px solid ${selected.color}30`, opacity: running ? 0.5 : 0.2 }} />
-          <div className="rounded-full flex items-center justify-center transition-all duration-1000" style={{ width: 200 * circleScale, height: 200 * circleScale, border: `2px solid ${selected.color}40`, background: `${selected.color}08`, boxShadow: running ? `0 0 60px ${selected.color}20` : 'none' }}>
+          {/* Outer ring */}
+          <motion.div
+            className="absolute rounded-full"
+            animate={{ width: 260 * circleScale, height: 260 * circleScale, opacity: running ? 0.5 : 0.2 }}
+            transition={{ type: "spring", stiffness: 40, damping: 15 }}
+            style={{ border: `1px solid ${selected.color}30` }}
+          />
+          {/* Inner circle */}
+          <motion.div
+            className="rounded-full flex items-center justify-center"
+            animate={{ width: 200 * circleScale, height: 200 * circleScale }}
+            transition={{ type: "spring", stiffness: 40, damping: 15 }}
+            style={{ border: `2px solid ${selected.color}40`, background: `${selected.color}08`, boxShadow: running ? `0 0 60px ${selected.color}20` : 'none' }}
+          >
             <div className="text-center">
-              {done ? (<><div className="text-3xl mb-1">✨</div><div className="text-sm font-semibold text-white">Complete</div></>) :
-               !running ? (<><div className="text-3xl mb-1">{selected.emoji}</div><div className="text-xs text-white/40">{cycles === 0 ? 'Tap Start' : 'Paused'}</div></>) :
-               (<><div className="text-sm font-medium text-white/50 mb-1">{currentPhase.label}</div><div className="text-4xl font-bold text-white">{currentPhase.duration - phaseSeconds}</div></>)}
+              <AnimatePresence mode="wait">
+                {done ? (
+                  <motion.div key="done" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}>
+                    <div className="text-3xl mb-1">✨</div>
+                    <div className="text-sm font-semibold text-white">Complete</div>
+                  </motion.div>
+                ) : !running ? (
+                  <motion.div key="paused" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <div className="text-3xl mb-1">{selected.emoji}</div>
+                    <div className="text-xs text-white/40">{cycles === 0 ? 'Tap Start' : 'Paused'}</div>
+                  </motion.div>
+                ) : (
+                  <motion.div key={`${phaseIdx}-${phaseSeconds}`} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
+                    <div className="text-sm font-medium text-white/50 mb-1">{currentPhase.label}</div>
+                    <div className="text-4xl font-bold text-white">{currentPhase.duration - phaseSeconds}</div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         <div className="flex gap-2 flex-wrap justify-center mb-8">
           {selected.phases.map((p, i) => (
-            <div key={i} className={`text-xs px-3 py-1.5 rounded-full transition-all ${i === phaseIdx && running ? 'text-white' : 'bg-white/[0.06] text-white/40'}`} style={i === phaseIdx && running ? { backgroundColor: selected.color } : {}}>
+            <motion.div
+              key={i}
+              className={`text-xs px-3 py-1.5 rounded-full transition-colors ${i === phaseIdx && running ? 'text-white' : 'bg-white/[0.06] text-white/40'}`}
+              style={i === phaseIdx && running ? { backgroundColor: selected.color } : {}}
+              animate={{ scale: i === phaseIdx && running ? 1.05 : 1 }}
+            >
               {p.label} {p.duration}s
-            </div>
+            </motion.div>
           ))}
         </div>
 
         {!done ? (
-          <button onClick={toggleRunning} className="font-semibold px-12 py-3 rounded-full text-sm text-white transition-all hover:shadow-lg" style={{ backgroundColor: selected.color, boxShadow: `0 0 30px ${selected.color}30` }}>
+          <motion.button
+            onClick={toggleRunning}
+            className="font-semibold px-12 py-3 rounded-full text-sm text-white"
+            style={{ backgroundColor: selected.color, boxShadow: `0 0 30px ${selected.color}30` }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
             {running ? 'Pause' : cycles === 0 ? 'Start' : 'Resume'}
-          </button>
+          </motion.button>
         ) : (
-          <div className="fade-up w-full max-w-sm px-6">
+          <motion.div
+            className="w-full max-w-sm px-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: "spring", stiffness: 100, damping: 20 }}
+          >
             <div className="rounded-2xl p-8 text-center mb-4 bg-white/[0.04] backdrop-blur-md border border-white/[0.08]">
               <div className="text-3xl mb-2">🌿</div>
               <h2 className="text-xl font-bold text-white mb-1">Session Complete</h2>
               <p className="text-sm text-white/40">{targetCycles} cycles · {fmt(totalSeconds)}</p>
             </div>
             <div className="flex gap-3">
-              <button onClick={restart} className="flex-1 bg-[#7C5CBF] text-white font-semibold py-3 rounded-full text-sm hover:bg-[#6A4DAD] transition-colors">Go Again</button>
-              <button onClick={() => setSelected(null)} className="flex-1 bg-white/[0.06] text-white font-semibold py-3 rounded-full text-sm hover:bg-white/[0.1] border border-white/[0.06] transition-colors">Change</button>
+              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={restart} className="flex-1 bg-[#7C5CBF] text-white font-semibold py-3 rounded-full text-sm hover:bg-[#6A4DAD] transition-colors">Go Again</motion.button>
+              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setSelected(null)} className="flex-1 bg-white/[0.06] text-white font-semibold py-3 rounded-full text-sm hover:bg-white/[0.1] border border-white/[0.06] transition-colors">Change</motion.button>
             </div>
-          </div>
+          </motion.div>
         )}
 
         {!running && !done && cycles === 0 && <p className="text-xs text-white/20 mt-6">Find a comfortable position and focus on your breath</p>}
