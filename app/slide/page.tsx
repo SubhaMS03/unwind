@@ -21,15 +21,12 @@ const DIFFICULTIES = [
 function createBoard(size: number): number[] {
   const total = size * size;
   const board = Array.from({ length: total }, (_, i) => i);
-  // Shuffle ensuring solvability
-  let shuffled = [...board];
+  const shuffled = [...board];
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
-  // Ensure solvable
   if (!isSolvable(shuffled, size)) {
-    // Swap first two non-empty tiles
     const idx1 = shuffled.findIndex(t => t !== 0);
     const idx2 = shuffled.findIndex((t, i) => t !== 0 && i !== idx1);
     [shuffled[idx1], shuffled[idx2]] = [shuffled[idx2], shuffled[idx1]];
@@ -106,7 +103,6 @@ export default function SlidePage() {
     }
   }, [board, size, solved]);
 
-  // Swipe support
   const handleTouchStart = useCallback((e: React.TouchEvent, idx: number) => {
     const touch = e.touches[0];
     const startX = touch.clientX;
@@ -134,74 +130,81 @@ export default function SlidePage() {
 
   const fmt = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 
+  // Selection screen
   if (!difficulty) {
     return (
-      <main className="min-h-screen flex flex-col max-w-2xl mx-auto px-4">
-        <nav className="border-b-2 border-black py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="text-sm opacity-60 hover:opacity-100 transition-opacity">← Back</Link>
-            <span className="opacity-20">|</span>
-            <span className="font-black uppercase tracking-widest text-sm">🧩 Slide Puzzle</span>
-          </div>
+      <main className="flex-1 flex flex-col w-full max-w-2xl mx-auto px-4">
+        <nav className="border-b-2 border-black py-5 flex items-center gap-3">
+          <Link href="/" className="text-sm opacity-60 hover:opacity-100 transition-opacity font-black uppercase tracking-widest">← Back</Link>
+          <span className="opacity-20">|</span>
+          <span className="font-black uppercase tracking-widest text-sm">🧩 Slide Puzzle</span>
         </nav>
 
-        <div className="flex-1 py-8">
-          <div className="border-2 border-black mb-6">
-            <div className="bg-black text-white px-5 py-2">
+        <div className="flex-1 flex flex-col justify-center py-8">
+          {/* Image selection */}
+          <div className="border-2 border-black mb-6" style={{ boxShadow: '4px 4px 0 #000' }}>
+            <div className="bg-black text-white px-5 py-3">
               <span className="font-black uppercase tracking-widest text-xs">Choose Your Scene</span>
             </div>
             <div className="p-5">
-              <div className="text-xs uppercase tracking-widest opacity-50 mb-3">Image</div>
-              <div className="grid grid-cols-3 gap-2 mb-2">
+              <div className="grid grid-cols-3 gap-3 mb-3">
                 {IMAGES.map((img, i) => (
                   <button
                     key={i}
                     onClick={() => setImageIdx(i)}
-                    className={`aspect-square overflow-hidden transition-all border-2 ${imageIdx === i ? 'border-black scale-105' : 'border-transparent opacity-50 hover:opacity-80'}`}
+                    className={`aspect-square overflow-hidden transition-all border-2 ${imageIdx === i ? 'border-black' : 'border-transparent opacity-40 hover:opacity-70'}`}
                     style={{ backgroundImage: `url(${img.url})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
                     title={img.label}
                   />
                 ))}
               </div>
-              <p className="text-xs opacity-50 text-center uppercase tracking-widest">{IMAGES[imageIdx].label}</p>
+              <p className="text-xs opacity-50 text-center uppercase tracking-widest font-black">{IMAGES[imageIdx].label}</p>
             </div>
           </div>
 
-          <div className="text-xs uppercase tracking-widest opacity-50 mb-3 px-1">Difficulty</div>
-          <div className="space-y-0">
+          {/* Difficulty */}
+          <div className="text-xs uppercase tracking-widest opacity-50 mb-3 px-1 font-black">Difficulty</div>
+          <div>
             {DIFFICULTIES.map((d, i) => (
               <button
                 key={d.label}
                 onClick={() => startGame(d)}
-                className={`w-full border-2 border-black p-4 text-left hover:bg-black hover:text-white transition-colors group flex items-center justify-between ${i > 0 ? '-mt-[2px]' : ''}`}
+                className={`w-full border-2 border-black p-5 text-left hover:bg-black hover:text-white transition-colors group flex items-center justify-between ${i > 0 ? '-mt-[2px]' : ''}`}
+                style={{ boxShadow: i === DIFFICULTIES.length - 1 ? '4px 4px 0 #000' : undefined }}
               >
                 <div>
-                  <div className="font-black uppercase tracking-widest">{d.label}</div>
+                  <div className="font-black uppercase tracking-widest text-base">{d.label}</div>
                   <div className="text-xs opacity-50 mt-0.5">{d.desc}</div>
                 </div>
-                <span className="font-black opacity-30 group-hover:opacity-100">→</span>
+                <span className="font-black opacity-30 group-hover:opacity-100 text-lg">→</span>
               </button>
             ))}
           </div>
         </div>
+
+        <footer className="border-t-2 border-black py-5 flex items-center justify-between">
+          <span className="font-black uppercase tracking-widest text-sm">[ UNWIND ]</span>
+          <span className="text-xs opacity-40">Slide Puzzle</span>
+        </footer>
       </main>
     );
   }
 
+  // Game screen
   return (
-    <main className="min-h-screen flex flex-col max-w-2xl mx-auto px-4">
-      <nav className="border-b-2 border-black py-4 flex items-center justify-between">
+    <main className="flex-1 flex flex-col w-full max-w-2xl mx-auto px-4">
+      <nav className="border-b-2 border-black py-5 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <button onClick={() => { setDifficulty(null); setRunning(false); }} className="text-sm opacity-60 hover:opacity-100 transition-opacity">← Change</button>
+          <button onClick={() => { setDifficulty(null); setRunning(false); }} className="text-sm opacity-60 hover:opacity-100 transition-opacity font-black uppercase tracking-widest">← Change</button>
           <span className="opacity-20">|</span>
           <span className="font-black uppercase tracking-widest text-sm">🧩 {difficulty.label} · {image.label}</span>
         </div>
-        <button onClick={() => setShowPreview(v => !v)} className="text-xs border-2 border-black px-3 py-1 hover:bg-black hover:text-white transition-colors uppercase tracking-widest">
+        <button onClick={() => setShowPreview(v => !v)} className="text-xs border-2 border-black px-3 py-1.5 hover:bg-black hover:text-white transition-colors uppercase tracking-widest font-black">
           {showPreview ? 'Hide' : 'Peek'}
         </button>
       </nav>
 
-      {/* Stats */}
+      {/* Stats bar */}
       <div className="border-b-2 border-black flex">
         <div className="flex-1 border-r-2 border-black p-4 text-center">
           <div className="font-black text-2xl">{moves}</div>
@@ -229,7 +232,7 @@ export default function SlidePage() {
       <div className="flex-1 flex flex-col items-center justify-center py-8">
         <div
           className="relative overflow-hidden"
-          style={{ width: boardPx, height: boardPx, border: '2px solid black' }}
+          style={{ width: boardPx, height: boardPx, border: '2px solid black', boxShadow: '4px 4px 0 #000' }}
         >
           {board.map((tile, idx) => {
             if (tile === 0) return (
@@ -241,7 +244,7 @@ export default function SlidePage() {
                   height: tileSize,
                   left: (idx % size) * tileSize,
                   top: Math.floor(idx / size) * tileSize,
-                  backgroundColor: '#f0f0f0',
+                  backgroundColor: '#f5f5f5',
                 }}
               />
             );
@@ -270,14 +273,14 @@ export default function SlidePage() {
         </div>
 
         {!solved && (
-          <p className="text-xs opacity-30 uppercase tracking-widest mt-4">Tap a tile next to the empty space</p>
+          <p className="text-xs opacity-30 uppercase tracking-widest mt-5 font-black">Tap a tile next to the empty space</p>
         )}
       </div>
 
       {/* Solved */}
       {solved && (
-        <div className="fade-in border-t-2 border-black">
-          <div className="bg-black text-white px-6 py-3 text-center">
+        <div className="fade-in border-t-2 border-black" style={{ boxShadow: '0 -4px 0 #000' }}>
+          <div className="bg-black text-white px-6 py-4 text-center">
             <div className="text-3xl mb-1">🎉</div>
             <div className="font-black text-xl uppercase tracking-widest">Puzzle Complete!</div>
             <div className="text-xs opacity-60 mt-1">{moves} moves · {fmt(seconds)}</div>

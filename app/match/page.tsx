@@ -30,6 +30,12 @@ const GRID: Record<Difficulty, string> = {
   hard: 'grid-cols-6',
 };
 
+const DIFF_INFO: Record<Difficulty, string> = {
+  easy: '4 pairs · 8 cards',
+  moderate: '8 pairs · 16 cards',
+  hard: '12 pairs · 24 cards',
+};
+
 export default function MatchPage() {
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
   const [cards, setCards] = useState<Card[]>([]);
@@ -100,53 +106,61 @@ export default function MatchPage() {
   const matchedCount = cards.filter(c => c.matched).length / 2;
   const totalPairs = cards.length / 2;
 
+  // Selection screen
   if (!difficulty) {
     return (
-      <main className="min-h-screen flex flex-col max-w-2xl mx-auto px-4">
-        <nav className="border-b-2 border-black py-4 flex items-center gap-3">
-          <Link href="/" className="text-sm opacity-60 hover:opacity-100 transition-opacity">← Back</Link>
+      <main className="flex-1 flex flex-col w-full max-w-2xl mx-auto px-4">
+        <nav className="border-b-2 border-black py-5 flex items-center gap-3">
+          <Link href="/" className="text-sm opacity-60 hover:opacity-100 transition-opacity font-black uppercase tracking-widest">← Back</Link>
           <span className="opacity-20">|</span>
           <span className="font-black uppercase tracking-widest text-sm">🃏 Memory Match</span>
         </nav>
 
-        <div className="flex-1 py-8">
-          <div className="border-2 border-black mb-6">
-            <div className="bg-black text-white px-5 py-2">
+        <div className="flex-1 flex flex-col justify-center py-8">
+          <div className="border-2 border-black mb-6" style={{ boxShadow: '4px 4px 0 #000' }}>
+            <div className="bg-black text-white px-5 py-3">
               <span className="font-black uppercase tracking-widest text-xs">Choose Difficulty</span>
             </div>
             <div className="p-5">
-              <p className="text-sm opacity-60 mb-0">Flip cards to find all matching pairs.</p>
+              <p className="text-sm opacity-60">Flip cards to find all matching pairs. Test your memory.</p>
             </div>
           </div>
 
-          <div className="space-y-0">
+          <div>
             {(['easy', 'moderate', 'hard'] as Difficulty[]).map((d, i) => (
               <button
                 key={d}
                 onClick={() => startGame(d)}
-                className={`w-full border-2 border-black p-4 text-left hover:bg-black hover:text-white transition-colors group flex items-center justify-between ${i > 0 ? '-mt-[2px]' : ''}`}
+                className={`w-full border-2 border-black p-5 text-left hover:bg-black hover:text-white transition-colors group flex items-center justify-between ${i > 0 ? '-mt-[2px]' : ''}`}
+                style={{ boxShadow: i === 2 ? '4px 4px 0 #000' : undefined }}
               >
                 <div>
-                  <div className="font-black uppercase tracking-widest">{d}</div>
-                  <div className="text-xs opacity-50 mt-0.5">{CARD_SETS[d].length} pairs · {CARD_SETS[d].length * 2} cards</div>
+                  <div className="font-black uppercase tracking-widest text-base">{d}</div>
+                  <div className="text-xs opacity-50 mt-0.5">{DIFF_INFO[d]}</div>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-xl">{CARD_SETS[d].slice(0, 3).join(' ')}</span>
-                  <span className="font-black opacity-30 group-hover:opacity-100">→</span>
+                  <span className="font-black opacity-30 group-hover:opacity-100 text-lg">→</span>
                 </div>
               </button>
             ))}
           </div>
         </div>
+
+        <footer className="border-t-2 border-black py-5 flex items-center justify-between">
+          <span className="font-black uppercase tracking-widest text-sm">[ UNWIND ]</span>
+          <span className="text-xs opacity-40">Memory Match</span>
+        </footer>
       </main>
     );
   }
 
+  // Game screen
   return (
-    <main className="min-h-screen flex flex-col max-w-2xl mx-auto px-4">
-      <nav className="border-b-2 border-black py-4 flex items-center justify-between">
+    <main className="flex-1 flex flex-col w-full max-w-2xl mx-auto px-4">
+      <nav className="border-b-2 border-black py-5 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <button onClick={() => { setDifficulty(null); setRunning(false); }} className="text-sm opacity-60 hover:opacity-100 transition-opacity">← Change</button>
+          <button onClick={() => { setDifficulty(null); setRunning(false); }} className="text-sm opacity-60 hover:opacity-100 transition-opacity font-black uppercase tracking-widest">← Change</button>
           <span className="opacity-20">|</span>
           <span className="font-black uppercase tracking-widest text-sm capitalize">🃏 {difficulty}</span>
         </div>
@@ -170,13 +184,13 @@ export default function MatchPage() {
       </div>
 
       {/* Cards */}
-      <div className="flex-1 py-6 px-2">
-        <div className={`grid ${GRID[difficulty]} gap-2`}>
+      <div className="flex-1 flex items-center justify-center py-6 px-2">
+        <div className={`grid ${GRID[difficulty]} gap-2 sm:gap-3 w-full max-w-md`}>
           {cards.map(card => (
             <button
               key={card.id}
               onClick={() => handleCardClick(card.id)}
-              className={`aspect-square text-2xl flex items-center justify-center transition-all border-2
+              className={`aspect-square text-2xl sm:text-3xl flex items-center justify-center transition-all border-2
                 ${card.matched
                   ? 'bg-black border-black text-white match-pop'
                   : card.flipped
@@ -193,7 +207,7 @@ export default function MatchPage() {
       {/* Solved */}
       {solved && (
         <div className="fade-in border-t-2 border-black">
-          <div className="bg-black text-white px-6 py-3 text-center">
+          <div className="bg-black text-white px-6 py-4 text-center">
             <div className="text-3xl mb-1">✨</div>
             <div className="font-black text-xl uppercase tracking-widest">All Pairs Found!</div>
             <div className="text-xs opacity-60 mt-1">{moves} moves · {fmt(seconds)}</div>
