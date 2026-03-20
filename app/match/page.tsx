@@ -23,6 +23,7 @@ function createCards(emojis: string[]): Card[] {
 
 const GRID: Record<Difficulty, string> = { easy: 'grid-cols-4', moderate: 'grid-cols-4', hard: 'grid-cols-6' };
 const DIFF_META: Record<Difficulty, string> = { easy: '4 pairs · 8 cards', moderate: '8 pairs · 16 cards', hard: '12 pairs · 24 cards' };
+const DIFF_COLOR: Record<Difficulty, string> = { easy: '#6DC29B', moderate: '#5BB5D5', hard: '#F47C48' };
 
 export default function MatchPage() {
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
@@ -70,30 +71,29 @@ export default function MatchPage() {
   const matchedCount = cards.filter(c => c.matched).length / 2;
   const totalPairs = cards.length / 2;
 
-  // Selection screen
   if (!difficulty) {
     return (
       <main className="flex-1 flex flex-col w-full">
-        <nav className="sticky top-0 z-50 bg-[#F9F7F4]/80 backdrop-blur-lg border-b border-[#E8E4DF]">
-          <div className="max-w-3xl mx-auto px-6 py-4 flex items-center gap-4">
-            <Link href="/" className="text-sm font-medium text-[#8B8680] hover:text-[#2D2A26] transition-colors">← Back</Link>
-            <div className="w-px h-4 bg-[#E8E4DF]" />
-            <span className="text-sm font-semibold text-[#2D2A26]">Memory Match</span>
+        <nav className="sticky top-0 z-50 bg-[#FEF8F0]/90 backdrop-blur-md">
+          <div className="max-w-5xl mx-auto px-6 sm:px-10 py-5 flex items-center gap-4">
+            <Link href="/" className="text-sm font-bold text-[#A8A29E] hover:text-[#2D2A26] transition-colors">← Back</Link>
+            <div className="w-px h-4 bg-[#E8E2D9]" />
+            <span className="text-sm font-bold text-[#2D2A26]">Memory Match</span>
           </div>
         </nav>
-        <div className="flex-1 flex flex-col items-center justify-center py-20 sm:py-28">
+        <div className="flex-1 flex flex-col items-center justify-center py-16 sm:py-24">
           <div className="max-w-md w-full px-6">
             <motion.div className="text-center mb-12" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "spring", stiffness: 100, damping: 20 }}>
-              <div className="text-5xl mb-5">🧠</div>
-              <h1 className="text-3xl font-bold text-[#2D2A26] mb-2">Memory Match</h1>
-              <p className="text-sm text-[#8B8680]">Flip cards and find all matching pairs.</p>
+              <div className="w-20 h-20 rounded-3xl bg-[#5BB5D5] flex items-center justify-center text-4xl mx-auto mb-6 shadow-lg shadow-[#5BB5D5]/25">🧠</div>
+              <h1 className="text-3xl font-extrabold text-[#2D2A26] mb-2">Memory Match</h1>
+              <p className="text-sm text-[#A8A29E]">Flip cards and find all matching pairs.</p>
             </motion.div>
             <div className="space-y-3">
               {(['easy', 'moderate', 'hard'] as Difficulty[]).map((d, i) => (
                 <motion.button
                   key={d}
                   onClick={() => startGame(d)}
-                  className="w-full rounded-2xl p-5 bg-white border border-[#EBE8E4] hover:shadow-md hover:border-[#DDD9D4] text-left flex items-center justify-between group transition-all duration-200"
+                  className="w-full rounded-2xl p-5 bg-white shadow-sm hover:shadow-md text-left flex items-center justify-between group transition-all duration-200"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1, type: "spring", stiffness: 100, damping: 20 }}
@@ -101,12 +101,14 @@ export default function MatchPage() {
                   whileTap={{ scale: 0.98 }}
                 >
                   <div>
-                    <div className="font-semibold text-[#2D2A26] capitalize">{d}</div>
-                    <div className="text-xs text-[#8B8680] mt-0.5">{DIFF_META[d]}</div>
+                    <div className="font-bold text-[#2D2A26] capitalize">{d}</div>
+                    <div className="text-xs text-[#A8A29E] mt-0.5">{DIFF_META[d]}</div>
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="text-lg">{CARD_SETS[d].slice(0, 3).join('')}</span>
-                    <svg className="w-5 h-5 text-[#CBC6C0] group-hover:text-[#6A9FB5] group-hover:translate-x-0.5 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: `${DIFF_COLOR[d]}15` }}>
+                      <svg className="w-4 h-4" style={{ color: DIFF_COLOR[d] }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+                    </div>
                   </div>
                 </motion.button>
               ))}
@@ -117,26 +119,28 @@ export default function MatchPage() {
     );
   }
 
+  const color = DIFF_COLOR[difficulty];
+
   return (
     <main className="flex-1 flex flex-col w-full">
-      <nav className="sticky top-0 z-50 bg-[#F9F7F4]/80 backdrop-blur-lg border-b border-[#E8E4DF]">
-        <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
+      <nav className="sticky top-0 z-50 bg-[#FEF8F0]/90 backdrop-blur-md">
+        <div className="max-w-5xl mx-auto px-6 sm:px-10 py-5 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <button onClick={() => { setDifficulty(null); setRunning(false); }} className="text-sm font-medium text-[#8B8680] hover:text-[#2D2A26] transition-colors">← Change</button>
-            <div className="w-px h-4 bg-[#E8E4DF]" />
-            <span className="text-sm font-semibold text-[#2D2A26] capitalize">🧠 {difficulty}</span>
+            <button onClick={() => { setDifficulty(null); setRunning(false); }} className="text-sm font-bold text-[#A8A29E] hover:text-[#2D2A26] transition-colors">← Change</button>
+            <div className="w-px h-4 bg-[#E8E2D9]" />
+            <span className="text-sm font-bold text-[#2D2A26] capitalize">🧠 {difficulty}</span>
           </div>
-          <button onClick={() => startGame(difficulty)} className="text-xs font-medium text-[#8B8680] hover:text-[#2D2A26] px-4 py-2 rounded-full bg-white border border-[#EBE8E4] hover:border-[#DDD9D4] transition-all">↺ Restart</button>
+          <button onClick={() => startGame(difficulty)} className="text-xs font-bold text-[#A8A29E] hover:text-[#2D2A26] px-4 py-2 rounded-full bg-white shadow-sm hover:shadow-md transition-all">↺ Restart</button>
         </div>
       </nav>
 
-      <div className="border-b border-[#EBE8E4]">
-        <div className="max-w-3xl mx-auto px-6 py-3 flex items-center gap-6">
-          <div><span className="text-lg font-bold text-[#2D2A26]">{matchedCount}/{totalPairs}</span><span className="text-xs text-[#8B8680] ml-1">pairs</span></div>
-          <div className="w-px h-5 bg-[#E8E4DF]" />
-          <div><span className="text-lg font-bold text-[#2D2A26]">{moves}</span><span className="text-xs text-[#8B8680] ml-1">moves</span></div>
-          <div className="w-px h-5 bg-[#E8E4DF]" />
-          <div><span className="text-lg font-bold text-[#2D2A26]">{fmt(seconds)}</span><span className="text-xs text-[#8B8680] ml-1">time</span></div>
+      <div className="bg-white shadow-sm">
+        <div className="max-w-5xl mx-auto px-6 sm:px-10 py-3 flex items-center gap-6">
+          <div><span className="text-lg font-extrabold text-[#2D2A26]">{matchedCount}/{totalPairs}</span><span className="text-xs text-[#A8A29E] font-bold ml-1">pairs</span></div>
+          <div className="w-px h-5 bg-[#E8E2D9]" />
+          <div><span className="text-lg font-extrabold text-[#2D2A26]">{moves}</span><span className="text-xs text-[#A8A29E] font-bold ml-1">moves</span></div>
+          <div className="w-px h-5 bg-[#E8E2D9]" />
+          <div><span className="text-lg font-extrabold text-[#2D2A26]">{fmt(seconds)}</span><span className="text-xs text-[#A8A29E] font-bold ml-1">time</span></div>
         </div>
       </div>
 
@@ -146,7 +150,7 @@ export default function MatchPage() {
             <motion.button
               key={card.id}
               onClick={() => handleCardClick(card.id)}
-              className="aspect-square flex items-center justify-center rounded-xl cursor-pointer"
+              className="aspect-square flex items-center justify-center rounded-2xl cursor-pointer shadow-sm"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{
                 opacity: 1,
@@ -160,8 +164,8 @@ export default function MatchPage() {
               }}
               style={{
                 transformStyle: 'preserve-3d',
-                backgroundColor: card.matched ? '#EDF5F8' : card.flipped ? '#FFFFFF' : '#F0EDEA',
-                border: card.matched ? '2px solid #6A9FB5' : card.flipped ? '2px solid #DDD9D4' : '2px solid #E8E4DF',
+                backgroundColor: card.matched ? `${color}20` : card.flipped ? '#FFFFFF' : '#F0ECE6',
+                border: card.matched ? `2px solid ${color}` : card.flipped ? '2px solid #E8E2D9' : '2px solid transparent',
               }}
             >
               <span className="text-2xl sm:text-3xl" style={{ opacity: card.flipped || card.matched ? 1 : 0 }}>
@@ -180,13 +184,13 @@ export default function MatchPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 100, damping: 20 }}
           >
-            <div className="max-w-sm mx-auto rounded-2xl p-8 text-center bg-white border border-[#EBE8E4] shadow-sm">
+            <div className="max-w-sm mx-auto rounded-3xl p-8 text-center bg-white shadow-sm">
               <div className="text-4xl mb-2">✨</div>
-              <h2 className="text-xl font-bold text-[#2D2A26] mb-1">All Pairs Found!</h2>
-              <p className="text-sm text-[#8B8680] mb-6">{moves} moves · {fmt(seconds)}</p>
+              <h2 className="text-xl font-extrabold text-[#2D2A26] mb-1">All Pairs Found!</h2>
+              <p className="text-sm text-[#A8A29E] mb-6">{moves} moves · {fmt(seconds)}</p>
               <div className="flex gap-3">
-                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => startGame(difficulty)} className="flex-1 bg-[#8B7EC8] text-white font-semibold py-3 rounded-full text-sm hover:bg-[#7A6DB7] transition-colors shadow-md">Play Again</motion.button>
-                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setDifficulty(null)} className="flex-1 bg-white text-[#2D2A26] font-semibold py-3 rounded-full text-sm hover:bg-[#F5F3F0] border border-[#EBE8E4] transition-colors">Change Mode</motion.button>
+                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => startGame(difficulty)} className="flex-1 bg-[#F47C48] text-white font-bold py-3.5 rounded-full text-sm shadow-md shadow-[#F47C48]/25">Play Again</motion.button>
+                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setDifficulty(null)} className="flex-1 bg-white text-[#2D2A26] font-bold py-3.5 rounded-full text-sm shadow-sm border border-[#E8E2D9]">Change Mode</motion.button>
               </div>
             </div>
           </motion.div>

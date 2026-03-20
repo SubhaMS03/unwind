@@ -136,24 +136,23 @@ export default function SlidePage() {
 
   const fmt = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
 
-  // Selection screen
   if (!difficulty) {
     return (
       <main className="flex-1 flex flex-col w-full">
-        <nav className="sticky top-0 z-50 bg-[#F9F7F4]/80 backdrop-blur-lg border-b border-[#E8E4DF]">
-          <div className="max-w-3xl mx-auto px-6 py-4 flex items-center gap-4">
-            <Link href="/" className="text-sm font-medium text-[#8B8680] hover:text-[#2D2A26] transition-colors">← Back</Link>
-            <div className="w-px h-4 bg-[#E8E4DF]" />
-            <span className="text-sm font-semibold text-[#2D2A26]">Slide Puzzle</span>
+        <nav className="sticky top-0 z-50 bg-[#FEF8F0]/90 backdrop-blur-md">
+          <div className="max-w-5xl mx-auto px-6 sm:px-10 py-5 flex items-center gap-4">
+            <Link href="/" className="text-sm font-bold text-[#A8A29E] hover:text-[#2D2A26] transition-colors">← Back</Link>
+            <div className="w-px h-4 bg-[#E8E2D9]" />
+            <span className="text-sm font-bold text-[#2D2A26]">Slide Puzzle</span>
           </div>
         </nav>
 
-        <div className="flex-1 flex flex-col items-center justify-center py-20 sm:py-28">
+        <div className="flex-1 flex flex-col items-center justify-center py-16 sm:py-24">
           <div className="max-w-md w-full px-6">
             <motion.div className="text-center mb-10" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "spring", stiffness: 100, damping: 20 }}>
-              <div className="text-5xl mb-5">🏔️</div>
-              <h1 className="text-3xl font-bold text-[#2D2A26] mb-2">Choose your scene</h1>
-              <p className="text-sm text-[#8B8680]">Pick an image, then select difficulty.</p>
+              <div className="w-20 h-20 rounded-3xl bg-[#6DC29B] flex items-center justify-center text-4xl mx-auto mb-6 shadow-lg shadow-[#6DC29B]/25">🏔️</div>
+              <h1 className="text-3xl font-extrabold text-[#2D2A26] mb-2">Choose your scene</h1>
+              <p className="text-sm text-[#A8A29E]">Pick an image, then select difficulty.</p>
             </motion.div>
 
             <div className="grid grid-cols-3 gap-3 mb-3">
@@ -161,10 +160,10 @@ export default function SlidePage() {
                 <motion.button
                   key={i}
                   onClick={() => { setImageIdx(i); playClick(); }}
-                  className={`aspect-square rounded-2xl overflow-hidden border-2 ${
-                    imageIdx === i ? 'border-[#7BAF8E] shadow-lg shadow-[#7BAF8E]/15' : 'border-transparent opacity-40 hover:opacity-70'
+                  className={`aspect-square rounded-2xl overflow-hidden border-3 shadow-sm ${
+                    imageIdx === i ? 'border-[#6DC29B] shadow-md shadow-[#6DC29B]/20' : 'border-transparent opacity-40 hover:opacity-70'
                   }`}
-                  style={{ backgroundImage: `url(${img.url})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+                  style={{ backgroundImage: `url(${img.url})`, backgroundSize: 'cover', backgroundPosition: 'center', borderWidth: imageIdx === i ? 3 : 0 }}
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: imageIdx === i ? 1 : 0.4, scale: imageIdx === i ? 1.02 : 1 }}
                   transition={{ type: "spring", stiffness: 200, damping: 20 }}
@@ -172,14 +171,14 @@ export default function SlidePage() {
                 />
               ))}
             </div>
-            <p className="text-sm font-medium text-[#8B8680] text-center mb-8">{IMAGES[imageIdx].label}</p>
+            <p className="text-sm font-bold text-[#A8A29E] text-center mb-8">{IMAGES[imageIdx].label}</p>
 
             <div className="space-y-3">
               {DIFFICULTIES.map((d, i) => (
                 <motion.button
                   key={d.label}
                   onClick={() => startGame(d)}
-                  className="w-full rounded-2xl p-5 bg-white border border-[#EBE8E4] hover:shadow-md hover:border-[#DDD9D4] text-left flex items-center justify-between group transition-all duration-200"
+                  className="w-full rounded-2xl p-5 bg-white shadow-sm hover:shadow-md text-left flex items-center justify-between group transition-all duration-200"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 + i * 0.1, type: "spring", stiffness: 100, damping: 20 }}
@@ -187,10 +186,12 @@ export default function SlidePage() {
                   whileTap={{ scale: 0.98 }}
                 >
                   <div>
-                    <div className="font-semibold text-[#2D2A26]">{d.label}</div>
-                    <div className="text-xs text-[#8B8680] mt-0.5">{d.desc}</div>
+                    <div className="font-bold text-[#2D2A26]">{d.label}</div>
+                    <div className="text-xs text-[#A8A29E] mt-0.5">{d.desc}</div>
                   </div>
-                  <svg className="w-5 h-5 text-[#CBC6C0] group-hover:text-[#7BAF8E] group-hover:translate-x-0.5 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+                  <div className="w-8 h-8 rounded-full bg-[#6DC29B]/10 flex items-center justify-center">
+                    <svg className="w-4 h-4 text-[#6DC29B]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+                  </div>
                 </motion.button>
               ))}
             </div>
@@ -200,60 +201,56 @@ export default function SlidePage() {
     );
   }
 
-  // Game screen
   return (
     <main className="flex-1 flex flex-col w-full">
-      <nav className="sticky top-0 z-50 bg-[#F9F7F4]/80 backdrop-blur-lg border-b border-[#E8E4DF]">
-        <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
+      <nav className="sticky top-0 z-50 bg-[#FEF8F0]/90 backdrop-blur-md">
+        <div className="max-w-5xl mx-auto px-6 sm:px-10 py-5 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <button onClick={() => { setDifficulty(null); setRunning(false); }} className="text-sm font-medium text-[#8B8680] hover:text-[#2D2A26] transition-colors">← Change</button>
-            <div className="w-px h-4 bg-[#E8E4DF]" />
-            <span className="text-sm font-semibold text-[#2D2A26]">🏔️ {difficulty.label} · {image.label}</span>
+            <button onClick={() => { setDifficulty(null); setRunning(false); }} className="text-sm font-bold text-[#A8A29E] hover:text-[#2D2A26] transition-colors">← Change</button>
+            <div className="w-px h-4 bg-[#E8E2D9]" />
+            <span className="text-sm font-bold text-[#2D2A26]">🏔️ {difficulty.label} · {image.label}</span>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={() => { setShowPreview(v => !v); playClick(); }} className="text-xs font-medium text-[#8B8680] hover:text-[#2D2A26] px-4 py-2 rounded-full bg-white border border-[#EBE8E4] hover:border-[#DDD9D4] transition-all">
+            <button onClick={() => { setShowPreview(v => !v); playClick(); }} className="text-xs font-bold text-[#A8A29E] hover:text-[#2D2A26] px-4 py-2 rounded-full bg-white shadow-sm hover:shadow-md transition-all">
               {showPreview ? 'Hide' : 'Peek'}
             </button>
-            <button onClick={() => startGame(difficulty)} className="text-xs font-medium text-[#8B8680] hover:text-[#2D2A26] px-4 py-2 rounded-full bg-white border border-[#EBE8E4] hover:border-[#DDD9D4] transition-all">
+            <button onClick={() => startGame(difficulty)} className="text-xs font-bold text-[#A8A29E] hover:text-[#2D2A26] px-4 py-2 rounded-full bg-white shadow-sm hover:shadow-md transition-all">
               ↺ Restart
             </button>
           </div>
         </div>
       </nav>
 
-      {/* Stats */}
-      <div className="border-b border-[#EBE8E4]">
-        <div className="max-w-3xl mx-auto px-6 py-3 flex items-center gap-6">
-          <div><span className="text-lg font-bold text-[#2D2A26]">{moves}</span><span className="text-xs text-[#8B8680] ml-1">moves</span></div>
-          <div className="w-px h-5 bg-[#E8E4DF]" />
-          <div><span className="text-lg font-bold text-[#2D2A26]">{fmt(seconds)}</span><span className="text-xs text-[#8B8680] ml-1">time</span></div>
+      <div className="bg-white shadow-sm">
+        <div className="max-w-5xl mx-auto px-6 sm:px-10 py-3 flex items-center gap-6">
+          <div><span className="text-lg font-extrabold text-[#2D2A26]">{moves}</span><span className="text-xs text-[#A8A29E] font-bold ml-1">moves</span></div>
+          <div className="w-px h-5 bg-[#E8E2D9]" />
+          <div><span className="text-lg font-extrabold text-[#2D2A26]">{fmt(seconds)}</span><span className="text-xs text-[#A8A29E] font-bold ml-1">time</span></div>
         </div>
       </div>
 
-      {/* Preview */}
       <AnimatePresence>
         {showPreview && (
           <motion.div
-            className="max-w-3xl mx-auto px-6 pt-4"
+            className="max-w-5xl mx-auto px-6 sm:px-10 pt-4"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ type: "spring", stiffness: 200, damping: 25 }}
           >
-            <img src={image.url} alt={image.label} className="w-full max-h-40 object-cover rounded-xl opacity-80" />
+            <img src={image.url} alt={image.label} className="w-full max-h-40 object-cover rounded-2xl" />
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Board */}
       <div className="flex-1 flex flex-col items-center justify-center py-8">
         <div
-          className="relative overflow-hidden rounded-xl"
-          style={{ width: boardPx, height: boardPx, boxShadow: '0 2px 24px rgba(0,0,0,0.08)' }}
+          className="relative overflow-hidden rounded-2xl shadow-lg"
+          style={{ width: boardPx, height: boardPx }}
         >
           {board.map((tile, idx) => {
             if (tile === 0) return (
-              <div key="empty" className="absolute" style={{ width: tileSize, height: tileSize, left: (idx % size) * tileSize, top: Math.floor(idx / size) * tileSize, backgroundColor: '#F0EDEA' }} />
+              <div key="empty" className="absolute" style={{ width: tileSize, height: tileSize, left: (idx % size) * tileSize, top: Math.floor(idx / size) * tileSize, backgroundColor: '#F0ECE6' }} />
             );
             const origRow = Math.floor((tile - 1) / size);
             const origCol = (tile - 1) % size;
@@ -270,7 +267,7 @@ export default function SlidePage() {
                   width: tileSize - 2, height: tileSize - 2,
                   backgroundImage: `url(${image.url})`, backgroundSize: `${boardPx}px ${boardPx}px`,
                   backgroundPosition: `-${origCol * tileSize}px -${origRow * tileSize}px`,
-                  borderRadius: 6,
+                  borderRadius: 8,
                 }}
                 onClick={() => handleTileClick(idx)}
                 onTouchStart={e => handleTouchStart(e, idx)}
@@ -279,10 +276,9 @@ export default function SlidePage() {
             );
           })}
         </div>
-        {!solved && <p className="text-xs text-[#CBC6C0] mt-5">Tap a tile next to the empty space</p>}
+        {!solved && <p className="text-xs text-[#D5D0CA] mt-5 font-medium">Tap a tile next to the empty space</p>}
       </div>
 
-      {/* Solved */}
       <AnimatePresence>
         {solved && (
           <motion.div
@@ -291,13 +287,13 @@ export default function SlidePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 100, damping: 20 }}
           >
-            <div className="max-w-sm mx-auto rounded-2xl p-8 text-center bg-white border border-[#EBE8E4] shadow-sm">
+            <div className="max-w-sm mx-auto rounded-3xl p-8 text-center bg-white shadow-sm">
               <div className="text-4xl mb-2">🎉</div>
-              <h2 className="text-xl font-bold text-[#2D2A26] mb-1">Puzzle Complete!</h2>
-              <p className="text-sm text-[#8B8680] mb-6">{moves} moves · {fmt(seconds)}</p>
+              <h2 className="text-xl font-extrabold text-[#2D2A26] mb-1">Puzzle Complete!</h2>
+              <p className="text-sm text-[#A8A29E] mb-6">{moves} moves · {fmt(seconds)}</p>
               <div className="flex gap-3">
-                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => startGame(difficulty)} className="flex-1 bg-[#8B7EC8] text-white font-semibold py-3 rounded-full text-sm hover:bg-[#7A6DB7] transition-colors shadow-md">Play Again</motion.button>
-                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setDifficulty(null)} className="flex-1 bg-white text-[#2D2A26] font-semibold py-3 rounded-full text-sm hover:bg-[#F5F3F0] border border-[#EBE8E4] transition-colors">Change Mode</motion.button>
+                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => startGame(difficulty)} className="flex-1 bg-[#F47C48] text-white font-bold py-3.5 rounded-full text-sm shadow-md shadow-[#F47C48]/25">Play Again</motion.button>
+                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setDifficulty(null)} className="flex-1 bg-white text-[#2D2A26] font-bold py-3.5 rounded-full text-sm shadow-sm border border-[#E8E2D9]">Change Mode</motion.button>
               </div>
             </div>
           </motion.div>

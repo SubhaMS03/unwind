@@ -6,9 +6,9 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useSound } from '@/app/hooks/useSound';
 
 const EXERCISES = [
-  { id: 'box', name: 'Box Breathing', description: 'Used by Navy SEALs to stay calm under pressure.', emoji: '⬜', color: '#8B7EC8', phases: [{ label: 'Inhale', duration: 4 }, { label: 'Hold', duration: 4 }, { label: 'Exhale', duration: 4 }, { label: 'Hold', duration: 4 }] },
-  { id: '478', name: '4-7-8 Breathing', description: 'A natural tranquilizer for the nervous system.', emoji: '🌙', color: '#6A9FB5', phases: [{ label: 'Inhale', duration: 4 }, { label: 'Hold', duration: 7 }, { label: 'Exhale', duration: 8 }] },
-  { id: 'calm', name: 'Calm Breath', description: 'Simple slow breathing to reduce anxiety.', emoji: '🌊', color: '#7BAF8E', phases: [{ label: 'Inhale', duration: 5 }, { label: 'Exhale', duration: 6 }] },
+  { id: 'box', name: 'Box Breathing', description: 'Used by Navy SEALs to stay calm under pressure.', emoji: '⬜', color: '#F47C48', phases: [{ label: 'Inhale', duration: 4 }, { label: 'Hold', duration: 4 }, { label: 'Exhale', duration: 4 }, { label: 'Hold', duration: 4 }] },
+  { id: '478', name: '4-7-8 Breathing', description: 'A natural tranquilizer for the nervous system.', emoji: '🌙', color: '#5BB5D5', phases: [{ label: 'Inhale', duration: 4 }, { label: 'Hold', duration: 7 }, { label: 'Exhale', duration: 8 }] },
+  { id: 'calm', name: 'Calm Breath', description: 'Simple slow breathing to reduce anxiety.', emoji: '🌊', color: '#6DC29B', phases: [{ label: 'Inhale', duration: 5 }, { label: 'Exhale', duration: 6 }] },
 ];
 
 type Exercise = typeof EXERCISES[0];
@@ -67,30 +67,29 @@ export default function BreathePage() {
   };
   const circleScale = getCircleScale();
 
-  // Selection screen
   if (!selected) {
     return (
       <main className="flex-1 flex flex-col w-full">
-        <nav className="sticky top-0 z-50 bg-[#F9F7F4]/80 backdrop-blur-lg border-b border-[#E8E4DF]">
-          <div className="max-w-3xl mx-auto px-6 py-4 flex items-center gap-4">
-            <Link href="/" className="text-sm font-medium text-[#8B8680] hover:text-[#2D2A26] transition-colors">← Back</Link>
-            <div className="w-px h-4 bg-[#E8E4DF]" />
-            <span className="text-sm font-semibold text-[#2D2A26]">Just Breathe</span>
+        <nav className="sticky top-0 z-50 bg-[#FEF8F0]/90 backdrop-blur-md">
+          <div className="max-w-5xl mx-auto px-6 sm:px-10 py-5 flex items-center gap-4">
+            <Link href="/" className="text-sm font-bold text-[#A8A29E] hover:text-[#2D2A26] transition-colors">← Back</Link>
+            <div className="w-px h-4 bg-[#E8E2D9]" />
+            <span className="text-sm font-bold text-[#2D2A26]">Just Breathe</span>
           </div>
         </nav>
-        <div className="flex-1 flex flex-col items-center justify-center py-20 sm:py-28">
+        <div className="flex-1 flex flex-col items-center justify-center py-16 sm:py-24">
           <div className="max-w-md w-full px-6">
             <motion.div className="text-center mb-12" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ type: "spring", stiffness: 100, damping: 20 }}>
-              <div className="text-5xl mb-5">🧘‍♀️</div>
-              <h1 className="text-3xl font-bold text-[#2D2A26] mb-2">Just Breathe</h1>
-              <p className="text-sm text-[#8B8680]">Guided breathing · 4 cycles per session</p>
+              <div className="w-20 h-20 rounded-3xl bg-[#F47C48] flex items-center justify-center text-4xl mx-auto mb-6 shadow-lg shadow-[#F47C48]/25">🧘‍♀️</div>
+              <h1 className="text-3xl font-extrabold text-[#2D2A26] mb-2">Just Breathe</h1>
+              <p className="text-sm text-[#A8A29E]">Guided breathing · 4 cycles per session</p>
             </motion.div>
             <div className="space-y-3">
               {EXERCISES.map((ex, i) => (
                 <motion.button
                   key={ex.id}
                   onClick={() => startExercise(ex)}
-                  className="w-full rounded-2xl p-5 bg-white border border-[#EBE8E4] hover:shadow-md hover:border-[#DDD9D4] text-left group transition-all duration-200"
+                  className="w-full rounded-2xl p-5 bg-white shadow-sm hover:shadow-md text-left group transition-all duration-200"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1, type: "spring", stiffness: 100, damping: 20 }}
@@ -98,17 +97,17 @@ export default function BreathePage() {
                   whileTap={{ scale: 0.98 }}
                 >
                   <div className="flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl bg-[#F5F3F0]">{ex.emoji}</div>
+                    <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl" style={{ backgroundColor: `${ex.color}15` }}>{ex.emoji}</div>
                     <div className="flex-1">
-                      <div className="font-semibold text-[#2D2A26] mb-0.5">{ex.name}</div>
-                      <div className="text-xs text-[#8B8680] mb-3">{ex.description}</div>
+                      <div className="font-bold text-[#2D2A26] mb-0.5">{ex.name}</div>
+                      <div className="text-xs text-[#A8A29E] mb-3">{ex.description}</div>
                       <div className="flex gap-1.5 flex-wrap">
                         {ex.phases.map((p, pi) => (
-                          <span key={pi} className="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#F5F3F0] text-[#8B8680]">{p.label} {p.duration}s</span>
+                          <span key={pi} className="text-[11px] font-bold px-2.5 py-0.5 rounded-full text-[#A8A29E]" style={{ backgroundColor: `${ex.color}10` }}>{p.label} {p.duration}s</span>
                         ))}
                       </div>
                     </div>
-                    <svg className="w-5 h-5 text-[#CBC6C0] group-hover:text-[#8B7EC8] group-hover:translate-x-0.5 transition-all mt-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+                    <svg className="w-5 h-5 text-[#D5D0CA] group-hover:translate-x-0.5 transition-all mt-2" style={{ color: ex.color }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
                   </div>
                 </motion.button>
               ))}
@@ -124,61 +123,59 @@ export default function BreathePage() {
 
   return (
     <main className="flex-1 flex flex-col w-full">
-      <nav className="sticky top-0 z-50 bg-[#F9F7F4]/80 backdrop-blur-lg border-b border-[#E8E4DF]">
-        <div className="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
+      <nav className="sticky top-0 z-50 bg-[#FEF8F0]/90 backdrop-blur-md">
+        <div className="max-w-5xl mx-auto px-6 sm:px-10 py-5 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <button onClick={() => { setSelected(null); setRunning(false); }} className="text-sm font-medium text-[#8B8680] hover:text-[#2D2A26] transition-colors">← Change</button>
-            <div className="w-px h-4 bg-[#E8E4DF]" />
-            <span className="text-sm font-semibold text-[#2D2A26]">{selected.emoji} {selected.name}</span>
+            <button onClick={() => { setSelected(null); setRunning(false); }} className="text-sm font-bold text-[#A8A29E] hover:text-[#2D2A26] transition-colors">← Change</button>
+            <div className="w-px h-4 bg-[#E8E2D9]" />
+            <span className="text-sm font-bold text-[#2D2A26]">{selected.emoji} {selected.name}</span>
           </div>
-          <button onClick={restart} className="text-xs font-medium text-[#8B8680] hover:text-[#2D2A26] px-4 py-2 rounded-full bg-white border border-[#EBE8E4] hover:border-[#DDD9D4] transition-all">↺ Restart</button>
+          <button onClick={restart} className="text-xs font-bold text-[#A8A29E] hover:text-[#2D2A26] px-4 py-2 rounded-full bg-white shadow-sm hover:shadow-md transition-all">↺ Restart</button>
         </div>
       </nav>
 
-      {/* Progress */}
-      <div className="border-b border-[#EBE8E4]">
-        <div className="max-w-3xl mx-auto px-6 py-3">
-          <div className="flex justify-between text-xs text-[#8B8680] mb-2">
+      <div className="bg-white shadow-sm">
+        <div className="max-w-5xl mx-auto px-6 sm:px-10 py-3">
+          <div className="flex justify-between text-xs text-[#A8A29E] font-bold mb-2">
             <span>Cycle {Math.min(cycles + (running ? 1 : 0), targetCycles)} of {targetCycles}</span>
             <span>{fmt(totalSeconds)}</span>
           </div>
-          <div className="w-full h-1.5 rounded-full bg-[#EBE8E4] overflow-hidden">
+          <div className="w-full h-2 rounded-full bg-[#F0ECE6] overflow-hidden">
             <motion.div className="h-full rounded-full" style={{ backgroundColor: selected.color }} animate={{ width: `${cycleProgress}%` }} transition={{ duration: 0.5 }} />
           </div>
         </div>
       </div>
 
-      {/* Circle */}
       <div className="flex-1 flex flex-col items-center justify-center py-12">
         <div className="relative flex items-center justify-center mb-10" style={{ width: 260, height: 260 }}>
           <motion.div
             className="absolute rounded-full"
             animate={{ width: 260 * circleScale, height: 260 * circleScale, opacity: running ? 0.3 : 0.15 }}
             transition={{ type: "spring", stiffness: 40, damping: 15 }}
-            style={{ border: `1px solid ${selected.color}` }}
+            style={{ border: `2px solid ${selected.color}` }}
           />
           <motion.div
             className="rounded-full flex items-center justify-center"
             animate={{ width: 200 * circleScale, height: 200 * circleScale }}
             transition={{ type: "spring", stiffness: 40, damping: 15 }}
-            style={{ border: `2px solid ${selected.color}40`, background: `${selected.color}10`, boxShadow: running ? `0 0 80px ${selected.color}15` : 'none' }}
+            style={{ border: `3px solid ${selected.color}50`, background: `${selected.color}12`, boxShadow: running ? `0 0 80px ${selected.color}20` : 'none' }}
           >
             <div className="text-center">
               <AnimatePresence mode="wait">
                 {done ? (
                   <motion.div key="done" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}>
                     <div className="text-3xl mb-1">✨</div>
-                    <div className="text-sm font-semibold text-[#2D2A26]">Complete</div>
+                    <div className="text-sm font-bold text-[#2D2A26]">Complete</div>
                   </motion.div>
                 ) : !running ? (
                   <motion.div key="paused" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                     <div className="text-3xl mb-1">{selected.emoji}</div>
-                    <div className="text-xs text-[#8B8680]">{cycles === 0 ? 'Tap Start' : 'Paused'}</div>
+                    <div className="text-xs text-[#A8A29E] font-bold">{cycles === 0 ? 'Tap Start' : 'Paused'}</div>
                   </motion.div>
                 ) : (
                   <motion.div key={`${phaseIdx}-${phaseSeconds}`} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.2 }}>
-                    <div className="text-sm font-medium text-[#8B8680] mb-1">{currentPhase.label}</div>
-                    <div className="text-4xl font-bold text-[#2D2A26]">{currentPhase.duration - phaseSeconds}</div>
+                    <div className="text-sm font-bold text-[#A8A29E] mb-1">{currentPhase.label}</div>
+                    <div className="text-4xl font-extrabold text-[#2D2A26]">{currentPhase.duration - phaseSeconds}</div>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -190,7 +187,7 @@ export default function BreathePage() {
           {selected.phases.map((p, i) => (
             <motion.div
               key={i}
-              className={`text-xs px-3 py-1.5 rounded-full transition-colors ${i === phaseIdx && running ? 'text-white' : 'bg-[#F5F3F0] text-[#8B8680]'}`}
+              className={`text-xs font-bold px-3 py-1.5 rounded-full transition-colors ${i === phaseIdx && running ? 'text-white' : 'bg-white text-[#A8A29E] shadow-sm'}`}
               style={i === phaseIdx && running ? { backgroundColor: selected.color } : {}}
               animate={{ scale: i === phaseIdx && running ? 1.05 : 1 }}
             >
@@ -202,8 +199,8 @@ export default function BreathePage() {
         {!done ? (
           <motion.button
             onClick={toggleRunning}
-            className="font-semibold px-12 py-3 rounded-full text-sm text-white shadow-lg"
-            style={{ backgroundColor: selected.color, boxShadow: `0 4px 24px ${selected.color}25` }}
+            className="font-bold px-12 py-3.5 rounded-full text-sm text-white shadow-lg"
+            style={{ backgroundColor: selected.color, boxShadow: `0 8px 24px ${selected.color}30` }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -216,19 +213,19 @@ export default function BreathePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 100, damping: 20 }}
           >
-            <div className="rounded-2xl p-8 text-center mb-4 bg-white border border-[#EBE8E4]">
+            <div className="rounded-3xl p-8 text-center mb-4 bg-white shadow-sm">
               <div className="text-3xl mb-2">🌿</div>
-              <h2 className="text-xl font-bold text-[#2D2A26] mb-1">Session Complete</h2>
-              <p className="text-sm text-[#8B8680]">{targetCycles} cycles · {fmt(totalSeconds)}</p>
+              <h2 className="text-xl font-extrabold text-[#2D2A26] mb-1">Session Complete</h2>
+              <p className="text-sm text-[#A8A29E]">{targetCycles} cycles · {fmt(totalSeconds)}</p>
             </div>
             <div className="flex gap-3">
-              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={restart} className="flex-1 bg-[#8B7EC8] text-white font-semibold py-3 rounded-full text-sm hover:bg-[#7A6DB7] transition-colors shadow-md">Go Again</motion.button>
-              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setSelected(null)} className="flex-1 bg-white text-[#2D2A26] font-semibold py-3 rounded-full text-sm hover:bg-[#F5F3F0] border border-[#EBE8E4] transition-colors">Change</motion.button>
+              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={restart} className="flex-1 bg-[#F47C48] text-white font-bold py-3.5 rounded-full text-sm shadow-md shadow-[#F47C48]/25">Go Again</motion.button>
+              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={() => setSelected(null)} className="flex-1 bg-white text-[#2D2A26] font-bold py-3.5 rounded-full text-sm shadow-sm">Change</motion.button>
             </div>
           </motion.div>
         )}
 
-        {!running && !done && cycles === 0 && <p className="text-xs text-[#CBC6C0] mt-8">Find a comfortable position and focus on your breath</p>}
+        {!running && !done && cycles === 0 && <p className="text-xs text-[#D5D0CA] mt-8 font-medium">Find a comfortable position and focus on your breath</p>}
       </div>
     </main>
   );
