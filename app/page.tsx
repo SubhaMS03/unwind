@@ -5,87 +5,112 @@ const GAMES = [
     href: "/slide",
     emoji: "🧩",
     title: "Slide Puzzle",
-    description: "Slide tiles to reveal a beautiful image. Satisfying and meditative.",
+    description: "Slide tiles to reveal a stunning landscape photo. Satisfying, meditative, beautiful.",
     modes: ["3×3 Easy", "4×4 Moderate", "5×5 Hard"],
-    color: "hover:bg-emerald-50 hover:border-emerald-400",
+    gradient: "from-emerald-400 to-teal-500",
+    lightBg: "from-emerald-50 to-teal-50",
+    border: "border-emerald-200",
+    tag: "bg-emerald-100 text-emerald-700",
+    glow: "hover:shadow-emerald-200",
   },
   {
     href: "/match",
     emoji: "🃏",
     title: "Memory Match",
-    description: "Flip cards and find matching pairs. Calm your mind, focus your attention.",
+    description: "Flip cards and find matching pairs. Calm your mind, focus your attention gently.",
     modes: ["4 pairs Easy", "8 pairs Moderate", "12 pairs Hard"],
-    color: "hover:bg-blue-50 hover:border-blue-400",
+    gradient: "from-blue-400 to-indigo-500",
+    lightBg: "from-blue-50 to-indigo-50",
+    border: "border-blue-200",
+    tag: "bg-blue-100 text-blue-700",
+    glow: "hover:shadow-blue-200",
   },
   {
     href: "/breathe",
-    emoji: "🌬️",
+    emoji: "🫁",
     title: "Just Breathe",
-    description: "Follow the circle. Inhale. Hold. Exhale. The simplest stress relief.",
-    modes: ["4-7-8 Technique", "Box Breathing", "Deep Calm"],
-    color: "hover:bg-purple-50 hover:border-purple-400",
+    description: "Follow the expanding circle. Inhale. Hold. Exhale. The simplest stress relief.",
+    modes: ["Box Breathing", "4-7-8 Technique", "Calm Breath"],
+    gradient: "from-purple-400 to-pink-400",
+    lightBg: "from-purple-50 to-pink-50",
+    border: "border-purple-200",
+    tag: "bg-purple-100 text-purple-700",
+    glow: "hover:shadow-purple-200",
   },
 ];
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex flex-col max-w-2xl mx-auto px-5">
-      {/* NAV */}
-      <nav className="py-6 flex items-center justify-between border-b border-gray-200">
-        <div>
-          <div className="text-2xl font-bold tracking-tight">Unwind</div>
-          <div className="mono text-xs text-gray-400 mt-0.5">stress relief · one game at a time</div>
-        </div>
-        <div className="text-2xl">🌿</div>
-      </nav>
+    <div style={{ minHeight: '100vh', width: '100%' }} className="flex flex-col">
 
-      <div className="flex-1 py-12">
-        {/* Hero */}
-        <div className="text-center mb-14">
-          <div className="text-5xl mb-5">🧘</div>
-          <h1 className="text-4xl font-bold tracking-tight mb-3">Take a moment for yourself.</h1>
-          <p className="text-gray-500 text-lg max-w-md mx-auto leading-relaxed">
-            No scores. No timers unless you want them. Just beautiful puzzles to calm your mind.
+      {/* Hero section */}
+      <div className="flex-1 flex flex-col items-center justify-start pt-16 pb-8 px-4">
+
+        {/* Wordmark */}
+        <div className="mb-12 text-center">
+          <div className="inline-flex items-center gap-2 glass rounded-full px-5 py-2 mb-8 shadow-sm">
+            <span className="text-green-500">🌿</span>
+            <span className="text-sm font-medium text-gray-500 tracking-wide">stress relief · one moment at a time</span>
+          </div>
+          <h1 className="font-display text-6xl font-bold mb-4 leading-tight">
+            <span className="gradient-text">Unwind</span>
+          </h1>
+          <p className="text-gray-500 text-xl max-w-md mx-auto leading-relaxed font-light">
+            Beautiful puzzles to calm your mind.<br />No pressure. Just peace.
           </p>
         </div>
 
         {/* Game cards */}
-        <div className="space-y-4 mb-12">
+        <div className="w-full max-w-2xl space-y-4 px-2">
           {GAMES.map((game) => (
             <Link
               key={game.href}
               href={game.href}
-              className={`block border border-gray-200 p-6 rounded-2xl transition-all ${game.color} group`}
+              className={`block glass rounded-3xl p-6 shadow-lg hover:shadow-xl ${game.glow} transition-all duration-300 hover:-translate-y-0.5 border ${game.border} group`}
             >
-              <div className="flex items-start gap-5">
-                <div className="text-4xl">{game.emoji}</div>
-                <div className="flex-1">
-                  <div className="font-bold text-xl mb-1 group-hover:text-gray-900">{game.title}</div>
-                  <div className="text-gray-500 text-sm leading-relaxed mb-3">{game.description}</div>
+              <div className="flex items-center gap-5">
+                {/* Icon bubble */}
+                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${game.gradient} flex items-center justify-center text-3xl shadow-md flex-shrink-0`}>
+                  {game.emoji}
+                </div>
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="font-bold text-xl text-gray-800 group-hover:text-gray-900">{game.title}</span>
+                  </div>
+                  <p className="text-gray-500 text-sm leading-relaxed mb-3">{game.description}</p>
                   <div className="flex gap-2 flex-wrap">
                     {game.modes.map(m => (
-                      <span key={m} className="mono text-xs border border-gray-200 px-2 py-1 rounded-full text-gray-500">
+                      <span key={m} className={`text-xs px-2.5 py-1 rounded-full font-medium ${game.tag}`}>
                         {m}
                       </span>
                     ))}
                   </div>
                 </div>
-                <div className="text-gray-300 group-hover:text-gray-600 text-2xl mt-1">→</div>
+
+                <div className="text-gray-300 group-hover:text-gray-500 group-hover:translate-x-1 transition-all text-xl flex-shrink-0">
+                  →
+                </div>
               </div>
             </Link>
           ))}
         </div>
 
         {/* Quote */}
-        <div className="text-center py-8 border-t border-gray-100">
-          <p className="text-gray-400 italic text-sm">&ldquo;Almost everything will work again if you unplug it for a few minutes.&rdquo;</p>
-          <p className="mono text-xs text-gray-300 mt-2">— Anne Lamott</p>
+        <div className="mt-16 text-center max-w-sm px-4">
+          <p className="text-gray-400 italic text-sm leading-relaxed">
+            &ldquo;Almost everything will work again if you unplug it for a few minutes — including you.&rdquo;
+          </p>
+          <p className="text-gray-300 text-xs mt-2 font-medium tracking-wide">— Anne Lamott</p>
         </div>
+
       </div>
 
-      <footer className="border-t border-gray-100 py-5 text-center">
-        <span className="mono text-xs text-gray-300">Unwind · Made with care</span>
+      {/* Footer */}
+      <footer className="py-6 text-center">
+        <span className="text-xs text-gray-300 tracking-wider">UNWIND · MADE WITH CARE ✦</span>
       </footer>
-    </main>
+
+    </div>
   );
 }
