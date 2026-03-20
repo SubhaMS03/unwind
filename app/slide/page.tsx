@@ -134,45 +134,48 @@ export default function SlidePage() {
   if (!difficulty) {
     return (
       <main className="flex-1 flex flex-col w-full bg-white">
-        <nav className="border-b border-[#E2DED9]">
-          <div className="max-w-5xl mx-auto px-6 py-4 flex items-center gap-4">
-            <Link href="/" className="text-sm text-[#7A7672] hover:text-[#2D2C2B] transition-colors">← Back</Link>
+        <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#E2DED9]/60">
+          <div className="max-w-6xl mx-auto px-6 sm:px-8 py-4 flex items-center gap-4">
+            <Link href="/" className="text-sm font-medium text-[#7A7672] hover:text-[#2D2C2B] transition-colors">← Back</Link>
             <div className="w-px h-4 bg-[#E2DED9]" />
-            <span className="text-sm font-semibold text-[#2D2C2B]">🧩 Slide Puzzle</span>
+            <span className="text-sm font-semibold text-[#2D2C2B]">Slide Puzzle</span>
           </div>
         </nav>
 
-        <div className="flex-1 flex flex-col items-center justify-center py-10">
+        <div className="flex-1 flex flex-col items-center justify-center py-16">
           <div className="max-w-md w-full px-6">
-            <h1 className="text-2xl font-bold text-[#2D2C2B] text-center mb-2">Choose your scene</h1>
-            <p className="text-sm text-[#7A7672] text-center mb-6">Pick an image, then select difficulty.</p>
+            <div className="text-center mb-8">
+              <div className="w-16 h-16 rounded-2xl bg-[#E5F5EB] flex items-center justify-center text-3xl mx-auto mb-5">🏔️</div>
+              <h1 className="text-3xl font-bold text-[#2D2C2B] mb-2">Choose your scene</h1>
+              <p className="text-sm text-[#7A7672]">Pick an image, then select difficulty.</p>
+            </div>
 
             <div className="grid grid-cols-3 gap-3 mb-3">
               {IMAGES.map((img, i) => (
                 <button
                   key={i}
                   onClick={() => setImageIdx(i)}
-                  className={`aspect-square rounded-xl overflow-hidden transition-all duration-200 border-2 ${
-                    imageIdx === i ? 'border-[#7C5CBF] shadow-md' : 'border-transparent opacity-50 hover:opacity-75'
+                  className={`aspect-square rounded-2xl overflow-hidden transition-all duration-200 border-2 ${
+                    imageIdx === i ? 'border-[#5BA87C] shadow-lg scale-[1.02]' : 'border-transparent opacity-50 hover:opacity-75'
                   }`}
                   style={{ backgroundImage: `url(${img.url})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
                 />
               ))}
             </div>
-            <p className="text-sm text-[#7A7672] text-center mb-8">{IMAGES[imageIdx].label}</p>
+            <p className="text-sm font-medium text-[#7A7672] text-center mb-8">{IMAGES[imageIdx].label}</p>
 
-            <div className="space-y-2">
+            <div className="space-y-3">
               {DIFFICULTIES.map((d) => (
                 <button
                   key={d.label}
                   onClick={() => startGame(d)}
-                  className="w-full rounded-xl p-4 bg-[#FAF8F5] hover:bg-[#F0ECE7] text-left flex items-center justify-between group transition-colors"
+                  className="w-full rounded-2xl p-5 bg-[#FAF8F5] hover:bg-[#F0ECE7] border border-[#E2DED9]/60 hover:border-[#5BA87C]/30 hover:shadow-md text-left flex items-center justify-between group transition-all duration-200"
                 >
                   <div>
                     <div className="font-semibold text-[#2D2C2B]">{d.label}</div>
                     <div className="text-xs text-[#7A7672] mt-0.5">{d.desc}</div>
                   </div>
-                  <svg className="w-5 h-5 text-[#B5B1AD] group-hover:text-[#7C5CBF] group-hover:translate-x-0.5 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+                  <svg className="w-5 h-5 text-[#B5B1AD] group-hover:text-[#5BA87C] group-hover:translate-x-0.5 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
                 </button>
               ))}
             </div>
@@ -185,18 +188,18 @@ export default function SlidePage() {
   // Game screen
   return (
     <main className="flex-1 flex flex-col w-full bg-white">
-      <nav className="border-b border-[#E2DED9]">
-        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#E2DED9]/60">
+        <div className="max-w-6xl mx-auto px-6 sm:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <button onClick={() => { setDifficulty(null); setRunning(false); }} className="text-sm text-[#7A7672] hover:text-[#2D2C2B] transition-colors">← Change</button>
+            <button onClick={() => { setDifficulty(null); setRunning(false); }} className="text-sm font-medium text-[#7A7672] hover:text-[#2D2C2B] transition-colors">← Change</button>
             <div className="w-px h-4 bg-[#E2DED9]" />
-            <span className="text-sm font-semibold text-[#2D2C2B]">🧩 {difficulty.label} · {image.label}</span>
+            <span className="text-sm font-semibold text-[#2D2C2B]">🏔️ {difficulty.label} · {image.label}</span>
           </div>
           <div className="flex items-center gap-2">
-            <button onClick={() => setShowPreview(v => !v)} className="text-xs text-[#7A7672] hover:text-[#2D2C2B] px-3 py-1.5 rounded-full bg-[#FAF8F5] hover:bg-[#F0ECE7] transition-colors">
+            <button onClick={() => setShowPreview(v => !v)} className="text-xs font-medium text-[#7A7672] hover:text-[#2D2C2B] px-4 py-2 rounded-full bg-[#FAF8F5] hover:bg-[#F0ECE7] border border-[#E2DED9]/60 transition-all">
               {showPreview ? 'Hide' : 'Peek'}
             </button>
-            <button onClick={() => startGame(difficulty)} className="text-xs text-[#7A7672] hover:text-[#2D2C2B] px-3 py-1.5 rounded-full bg-[#FAF8F5] hover:bg-[#F0ECE7] transition-colors">
+            <button onClick={() => startGame(difficulty)} className="text-xs font-medium text-[#7A7672] hover:text-[#2D2C2B] px-4 py-2 rounded-full bg-[#FAF8F5] hover:bg-[#F0ECE7] border border-[#E2DED9]/60 transition-all">
               ↺ Restart
             </button>
           </div>

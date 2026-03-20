@@ -63,27 +63,30 @@ export default function MatchPage() {
   if (!difficulty) {
     return (
       <main className="flex-1 flex flex-col w-full bg-white">
-        <nav className="border-b border-[#E2DED9]">
-          <div className="max-w-5xl mx-auto px-6 py-4 flex items-center gap-4">
-            <Link href="/" className="text-sm text-[#7A7672] hover:text-[#2D2C2B] transition-colors">← Back</Link>
+        <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#E2DED9]/60">
+          <div className="max-w-6xl mx-auto px-6 sm:px-8 py-4 flex items-center gap-4">
+            <Link href="/" className="text-sm font-medium text-[#7A7672] hover:text-[#2D2C2B] transition-colors">← Back</Link>
             <div className="w-px h-4 bg-[#E2DED9]" />
-            <span className="text-sm font-semibold text-[#2D2C2B]">🃏 Memory Match</span>
+            <span className="text-sm font-semibold text-[#2D2C2B]">Memory Match</span>
           </div>
         </nav>
-        <div className="flex-1 flex flex-col items-center justify-center py-10">
+        <div className="flex-1 flex flex-col items-center justify-center py-16">
           <div className="max-w-md w-full px-6">
-            <h1 className="text-2xl font-bold text-[#2D2C2B] text-center mb-2">Memory Match</h1>
-            <p className="text-sm text-[#7A7672] text-center mb-8">Flip cards and find all matching pairs.</p>
-            <div className="space-y-2">
+            <div className="text-center mb-10">
+              <div className="w-16 h-16 rounded-2xl bg-[#EBF4F8] flex items-center justify-center text-3xl mx-auto mb-5">🧠</div>
+              <h1 className="text-3xl font-bold text-[#2D2C2B] mb-2">Memory Match</h1>
+              <p className="text-sm text-[#7A7672]">Flip cards and find all matching pairs.</p>
+            </div>
+            <div className="space-y-3">
               {(['easy', 'moderate', 'hard'] as Difficulty[]).map((d) => (
-                <button key={d} onClick={() => startGame(d)} className="w-full rounded-xl p-4 bg-[#FAF8F5] hover:bg-[#F0ECE7] text-left flex items-center justify-between group transition-colors">
+                <button key={d} onClick={() => startGame(d)} className="w-full rounded-2xl p-5 bg-[#FAF8F5] hover:bg-[#F0ECE7] border border-[#E2DED9]/60 hover:border-[#5B8DB8]/30 hover:shadow-md text-left flex items-center justify-between group transition-all duration-200">
                   <div>
                     <div className="font-semibold text-[#2D2C2B] capitalize">{d}</div>
                     <div className="text-xs text-[#7A7672] mt-0.5">{DIFF_META[d]}</div>
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="text-lg">{CARD_SETS[d].slice(0, 3).join('')}</span>
-                    <svg className="w-5 h-5 text-[#B5B1AD] group-hover:text-[#7C5CBF] group-hover:translate-x-0.5 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+                    <svg className="w-5 h-5 text-[#B5B1AD] group-hover:text-[#5B8DB8] group-hover:translate-x-0.5 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
                   </div>
                 </button>
               ))}
@@ -96,14 +99,14 @@ export default function MatchPage() {
 
   return (
     <main className="flex-1 flex flex-col w-full bg-white">
-      <nav className="border-b border-[#E2DED9]">
-        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-[#E2DED9]/60">
+        <div className="max-w-6xl mx-auto px-6 sm:px-8 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <button onClick={() => { setDifficulty(null); setRunning(false); }} className="text-sm text-[#7A7672] hover:text-[#2D2C2B] transition-colors">← Change</button>
+            <button onClick={() => { setDifficulty(null); setRunning(false); }} className="text-sm font-medium text-[#7A7672] hover:text-[#2D2C2B] transition-colors">← Change</button>
             <div className="w-px h-4 bg-[#E2DED9]" />
-            <span className="text-sm font-semibold text-[#2D2C2B] capitalize">🃏 {difficulty}</span>
+            <span className="text-sm font-semibold text-[#2D2C2B] capitalize">🧠 {difficulty}</span>
           </div>
-          <button onClick={() => startGame(difficulty)} className="text-xs text-[#7A7672] hover:text-[#2D2C2B] px-3 py-1.5 rounded-full bg-[#FAF8F5] hover:bg-[#F0ECE7] transition-colors">↺ Restart</button>
+          <button onClick={() => startGame(difficulty)} className="text-xs font-medium text-[#7A7672] hover:text-[#2D2C2B] px-4 py-2 rounded-full bg-[#FAF8F5] hover:bg-[#F0ECE7] border border-[#E2DED9]/60 transition-all">↺ Restart</button>
         </div>
       </nav>
 
