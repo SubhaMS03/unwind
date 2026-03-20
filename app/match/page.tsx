@@ -102,103 +102,112 @@ export default function MatchPage() {
 
   if (!difficulty) {
     return (
-      <div className="min-h-screen w-full flex flex-col items-center">
-        <div className="w-full max-w-lg px-6">
-          <nav className="py-5 flex items-center gap-3 border-b border-gray-100">
-            <Link href="/" className="text-sm text-gray-400 hover:text-gray-800 transition-colors">← Back</Link>
-            <span className="text-gray-200">|</span>
-            <span className="font-semibold text-sm">🃏 Memory Match</span>
-          </nav>
-          <div className="pt-10 pb-8">
-            <h1 className="text-3xl font-extrabold tracking-tight mb-1">Memory Match</h1>
-            <p className="text-gray-400 text-sm">Flip cards to find all matching pairs.</p>
+      <main className="min-h-screen flex flex-col max-w-2xl mx-auto px-4">
+        <nav className="border-b-2 border-black py-4 flex items-center gap-3">
+          <Link href="/" className="text-sm opacity-60 hover:opacity-100 transition-opacity">← Back</Link>
+          <span className="opacity-20">|</span>
+          <span className="font-black uppercase tracking-widest text-sm">🃏 Memory Match</span>
+        </nav>
+
+        <div className="flex-1 py-8">
+          <div className="border-2 border-black mb-6">
+            <div className="bg-black text-white px-5 py-2">
+              <span className="font-black uppercase tracking-widest text-xs">Choose Difficulty</span>
+            </div>
+            <div className="p-5">
+              <p className="text-sm opacity-60 mb-0">Flip cards to find all matching pairs.</p>
+            </div>
           </div>
-          <div className="space-y-2 pb-10">
-            {(['easy', 'moderate', 'hard'] as Difficulty[]).map(d => (
+
+          <div className="space-y-0">
+            {(['easy', 'moderate', 'hard'] as Difficulty[]).map((d, i) => (
               <button
                 key={d}
                 onClick={() => startGame(d)}
-                className="w-full border border-gray-100 rounded-xl p-4 text-left hover:border-gray-300 hover:bg-gray-50 transition-all group flex items-center justify-between"
+                className={`w-full border-2 border-black p-4 text-left hover:bg-black hover:text-white transition-colors group flex items-center justify-between ${i > 0 ? '-mt-[2px]' : ''}`}
               >
                 <div>
-                  <div className="font-semibold capitalize">{d}</div>
-                  <div className="text-xs text-gray-400 mt-0.5">{CARD_SETS[d].length} pairs · {CARD_SETS[d].length * 2} cards</div>
+                  <div className="font-black uppercase tracking-widest">{d}</div>
+                  <div className="text-xs opacity-50 mt-0.5">{CARD_SETS[d].length} pairs · {CARD_SETS[d].length * 2} cards</div>
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="text-xl">{CARD_SETS[d].slice(0, 3).join(' ')}</span>
-                  <span className="text-gray-300 group-hover:text-gray-600 transition-colors">→</span>
+                  <span className="font-black opacity-30 group-hover:opacity-100">→</span>
                 </div>
               </button>
             ))}
           </div>
         </div>
-      </div>
+      </main>
     );
   }
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center">
-      <div className="w-full max-w-lg px-6">
-        <nav className="py-5 flex items-center justify-between border-b border-gray-100">
-          <div className="flex items-center gap-3">
-            <button onClick={() => { setDifficulty(null); setRunning(false); }} className="text-sm text-gray-400 hover:text-gray-800 transition-colors">← Change</button>
-            <span className="text-gray-200">|</span>
-            <span className="font-semibold text-sm capitalize">🃏 {difficulty}</span>
-          </div>
-          <button onClick={() => startGame(difficulty)} className="text-xs border border-gray-200 px-4 py-1.5 rounded-full hover:bg-gray-50 transition-colors">↺ Restart</button>
-        </nav>
-
-        {/* Stats */}
-        <div className="flex items-center justify-between py-5 border-b border-gray-100">
-          <div className="text-center">
-            <div className="text-2xl font-bold">{matchedCount}/{totalPairs}</div>
-            <div className="text-xs text-gray-400 mt-0.5">pairs found</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold">{moves}</div>
-            <div className="text-xs text-gray-400 mt-0.5">moves</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold">{fmt(seconds)}</div>
-            <div className="text-xs text-gray-400 mt-0.5">time</div>
-          </div>
+    <main className="min-h-screen flex flex-col max-w-2xl mx-auto px-4">
+      <nav className="border-b-2 border-black py-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <button onClick={() => { setDifficulty(null); setRunning(false); }} className="text-sm opacity-60 hover:opacity-100 transition-opacity">← Change</button>
+          <span className="opacity-20">|</span>
+          <span className="font-black uppercase tracking-widest text-sm capitalize">🃏 {difficulty}</span>
         </div>
+        <button onClick={() => startGame(difficulty)} className="border-2 border-black px-4 py-2 text-xs font-black uppercase tracking-widest hover:bg-black hover:text-white transition-colors">↺ Restart</button>
+      </nav>
 
-        {/* Cards */}
-        <div className={`grid ${GRID[difficulty]} gap-2.5 py-6`}>
+      {/* Stats */}
+      <div className="border-b-2 border-black flex">
+        <div className="flex-1 border-r-2 border-black p-4 text-center">
+          <div className="font-black text-2xl">{matchedCount}/{totalPairs}</div>
+          <div className="text-xs uppercase tracking-widest opacity-50">Pairs</div>
+        </div>
+        <div className="flex-1 border-r-2 border-black p-4 text-center">
+          <div className="font-black text-2xl">{moves}</div>
+          <div className="text-xs uppercase tracking-widest opacity-50">Moves</div>
+        </div>
+        <div className="flex-1 p-4 text-center">
+          <div className="font-black text-2xl">{fmt(seconds)}</div>
+          <div className="text-xs uppercase tracking-widest opacity-50">Time</div>
+        </div>
+      </div>
+
+      {/* Cards */}
+      <div className="flex-1 py-6 px-2">
+        <div className={`grid ${GRID[difficulty]} gap-2`}>
           {cards.map(card => (
             <button
               key={card.id}
               onClick={() => handleCardClick(card.id)}
-              className={`aspect-square rounded-xl text-2xl flex items-center justify-center transition-all border
+              className={`aspect-square text-2xl flex items-center justify-center transition-all border-2
                 ${card.matched
-                  ? 'bg-gray-900 border-gray-900 text-white match-pop'
+                  ? 'bg-black border-black text-white match-pop'
                   : card.flipped
-                  ? 'bg-gray-100 border-gray-200 flip-in'
-                  : 'bg-white border-gray-100 hover:border-gray-300 hover:bg-gray-50 cursor-pointer'
+                  ? 'bg-white border-black flip-in'
+                  : 'bg-white border-black opacity-30 hover:opacity-60 cursor-pointer'
                 }`}
             >
               {card.flipped || card.matched ? card.emoji : ''}
             </button>
           ))}
         </div>
-
-        {solved && (
-          <div className="fade-in border border-gray-200 rounded-2xl p-6 mb-6 text-center">
-            <div className="text-4xl mb-3">✨</div>
-            <div className="font-extrabold text-xl mb-1">All Pairs Found!</div>
-            <div className="text-sm text-gray-400 mb-5">{moves} moves · {fmt(seconds)}</div>
-            <div className="flex gap-3 justify-center">
-              <button onClick={() => startGame(difficulty)} className="bg-black text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-gray-800 transition-colors">
-                Play Again
-              </button>
-              <button onClick={() => setDifficulty(null)} className="border border-gray-200 px-6 py-2.5 rounded-full text-sm text-gray-600 hover:bg-gray-50 transition-colors">
-                Change Mode
-              </button>
-            </div>
-          </div>
-        )}
       </div>
-    </div>
+
+      {/* Solved */}
+      {solved && (
+        <div className="fade-in border-t-2 border-black">
+          <div className="bg-black text-white px-6 py-3 text-center">
+            <div className="text-3xl mb-1">✨</div>
+            <div className="font-black text-xl uppercase tracking-widest">All Pairs Found!</div>
+            <div className="text-xs opacity-60 mt-1">{moves} moves · {fmt(seconds)}</div>
+          </div>
+          <div className="p-5 flex gap-3">
+            <button onClick={() => startGame(difficulty)} className="flex-1 bg-black text-white border-2 border-black py-3 font-black uppercase tracking-widest text-sm hover:bg-white hover:text-black transition-colors">
+              Play Again
+            </button>
+            <button onClick={() => setDifficulty(null)} className="flex-1 border-2 border-black py-3 font-black uppercase tracking-widest text-sm hover:bg-black hover:text-white transition-colors">
+              Change Mode
+            </button>
+          </div>
+        </div>
+      )}
+    </main>
   );
 }

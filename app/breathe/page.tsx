@@ -176,44 +176,50 @@ export default function BreathePage() {
   // Selection screen
   if (!selected) {
     return (
-      <div className="min-h-screen w-full flex flex-col items-center">
-        <div className="w-full max-w-lg px-6">
-          <nav className="py-5 flex items-center gap-3 border-b border-gray-100">
-            <Link href="/" className="text-sm text-gray-400 hover:text-gray-800 transition-colors">← Back</Link>
-            <span className="text-gray-200">|</span>
-            <span className="font-semibold text-sm">🫁 Just Breathe</span>
-          </nav>
-          <div className="pt-10 pb-8">
-            <h1 className="text-3xl font-extrabold tracking-tight mb-1">Just Breathe</h1>
-            <p className="text-gray-400 text-sm">Choose a breathing technique. Your body will thank you.</p>
+      <main className="min-h-screen flex flex-col max-w-2xl mx-auto px-4">
+        <nav className="border-b-2 border-black py-4 flex items-center gap-3">
+          <Link href="/" className="text-sm opacity-60 hover:opacity-100 transition-opacity">← Back</Link>
+          <span className="opacity-20">|</span>
+          <span className="font-black uppercase tracking-widest text-sm">🫁 Just Breathe</span>
+        </nav>
+
+        <div className="flex-1 py-8">
+          <div className="border-2 border-black mb-6">
+            <div className="bg-black text-white px-5 py-2">
+              <span className="font-black uppercase tracking-widest text-xs">Choose Technique</span>
+            </div>
+            <div className="p-5">
+              <p className="text-sm opacity-60">Guided breathing to calm your nervous system.</p>
+            </div>
           </div>
-          <div className="space-y-2 pb-10">
-            {EXERCISES.map(ex => (
+
+          <div className="space-y-0">
+            {EXERCISES.map((ex, i) => (
               <button
                 key={ex.id}
                 onClick={() => startExercise(ex)}
-                className="w-full border border-gray-100 rounded-xl p-4 text-left hover:border-gray-300 hover:bg-gray-50 transition-all group"
+                className={`w-full border-2 border-black p-5 text-left hover:bg-black hover:text-white transition-colors group ${i > 0 ? '-mt-[2px]' : ''}`}
               >
-                <div className="flex items-center gap-4">
-                  <div className="text-3xl w-10 flex-shrink-0">{ex.emoji}</div>
+                <div className="flex items-start gap-4">
+                  <div className="text-3xl flex-shrink-0">{ex.emoji}</div>
                   <div className="flex-1">
-                    <div className="font-semibold text-gray-900">{ex.name}</div>
-                    <div className="text-xs text-gray-400 mt-0.5 mb-2">{ex.description}</div>
-                    <div className="flex gap-1.5 flex-wrap">
-                      {ex.phases.map((p, i) => (
-                        <span key={i} className="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">
+                    <div className="font-black uppercase tracking-widest">{ex.name}</div>
+                    <div className="text-xs opacity-50 mt-0.5 mb-2">{ex.description}</div>
+                    <div className="flex gap-2 flex-wrap">
+                      {ex.phases.map((p, pi) => (
+                        <span key={pi} className="text-xs border border-current px-2 py-0.5 opacity-50 group-hover:opacity-80">
                           {p.label} {p.duration}s
                         </span>
                       ))}
                     </div>
                   </div>
-                  <span className="text-gray-300 group-hover:text-gray-600 transition-colors">→</span>
+                  <span className="font-black opacity-30 group-hover:opacity-100 mt-1">→</span>
                 </div>
               </button>
             ))}
           </div>
         </div>
-      </div>
+      </main>
     );
   }
 
@@ -221,118 +227,121 @@ export default function BreathePage() {
   const cycleProgress = (cycles / targetCycles) * 100;
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center">
-      <div className="w-full max-w-lg px-6">
-        <nav className="py-5 flex items-center justify-between border-b border-gray-100">
-          <div className="flex items-center gap-3">
-            <button onClick={() => setSelected(null)} className="text-sm text-gray-400 hover:text-gray-800 transition-colors">← Change</button>
-            <span className="text-gray-200">|</span>
-            <span className="font-semibold text-sm">{selected.emoji} {selected.name}</span>
-          </div>
-          <button onClick={restart} className="text-xs border border-gray-200 px-4 py-1.5 rounded-full hover:bg-gray-50 transition-colors">↺ Restart</button>
-        </nav>
-
-        {/* Progress bar */}
-        <div className="py-5 border-b border-gray-100">
-          <div className="flex justify-between text-xs text-gray-400 mb-2">
-            <span>Cycle {Math.min(cycles + (running ? 1 : 0), targetCycles)} of {targetCycles}</span>
-            <span>{fmt(totalSeconds)}</span>
-          </div>
-          <div className="w-full h-1 bg-gray-100 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-gray-900 rounded-full transition-all duration-1000"
-              style={{ width: `${cycleProgress}%` }}
-            />
-          </div>
+    <main className="min-h-screen flex flex-col max-w-2xl mx-auto px-4">
+      <nav className="border-b-2 border-black py-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <button onClick={() => setSelected(null)} className="text-sm opacity-60 hover:opacity-100 transition-opacity">← Change</button>
+          <span className="opacity-20">|</span>
+          <span className="font-black uppercase tracking-widest text-sm">{selected.emoji} {selected.name}</span>
         </div>
+        <button onClick={restart} className="border-2 border-black px-4 py-2 text-xs font-black uppercase tracking-widest hover:bg-black hover:text-white transition-colors">↺ Restart</button>
+      </nav>
 
-        {/* Breathing circle */}
-        <div className="flex justify-center py-12">
-          <div className="relative flex items-center justify-center" style={{ width: 260, height: 260 }}>
-            {/* Outer ring */}
-            <div
-              className="absolute rounded-full border border-gray-200 transition-all duration-1000"
-              style={{ width: 260 * circleScale, height: 260 * circleScale, opacity: running ? 0.6 : 0.3 }}
-            />
-            {/* Main circle */}
-            <div
-              className="rounded-full border-2 border-gray-900 flex items-center justify-center transition-all duration-1000 bg-white"
-              style={{ width: 210 * circleScale, height: 210 * circleScale }}
-            >
-              <div className="text-center px-4">
-                {done ? (
-                  <>
-                    <div className="text-4xl mb-2">✨</div>
-                    <div className="text-sm font-bold text-gray-800">Done!</div>
-                  </>
-                ) : !running ? (
-                  <>
-                    <div className="text-4xl mb-2">{selected.emoji}</div>
-                    <div className="text-xs text-gray-400">{cycles === 0 ? 'Tap Start' : 'Paused'}</div>
-                  </>
-                ) : (
-                  <>
-                    <div className="text-xl font-bold text-gray-900">{currentPhase.label}</div>
-                    <div className="text-5xl font-light text-gray-700 mt-1 leading-none">
-                      {currentPhase.duration - phaseSeconds}
-                    </div>
-                  </>
-                )}
-              </div>
+      {/* Progress */}
+      <div className="border-b-2 border-black px-4 py-4">
+        <div className="flex justify-between text-xs uppercase tracking-widest opacity-50 mb-2">
+          <span>Cycle {Math.min(cycles + (running ? 1 : 0), targetCycles)} of {targetCycles}</span>
+          <span>{fmt(totalSeconds)}</span>
+        </div>
+        <div className="w-full h-1 bg-gray-100 overflow-hidden">
+          <div
+            className="h-full bg-black transition-all duration-1000"
+            style={{ width: `${cycleProgress}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Circle */}
+      <div className="flex-1 flex flex-col items-center justify-center py-8">
+        <div className="relative flex items-center justify-center mb-8" style={{ width: 260, height: 260 }}>
+          {/* Outer ring */}
+          <div
+            className="absolute border border-black transition-all duration-1000"
+            style={{
+              width: 260 * circleScale,
+              height: 260 * circleScale,
+              borderRadius: '50%',
+              opacity: running ? 0.15 : 0.08,
+            }}
+          />
+          {/* Main circle */}
+          <div
+            className="border-2 border-black flex items-center justify-center transition-all duration-1000 bg-white"
+            style={{ width: 210 * circleScale, height: 210 * circleScale, borderRadius: '50%' }}
+          >
+            <div className="text-center px-4">
+              {done ? (
+                <>
+                  <div className="text-4xl mb-2">✨</div>
+                  <div className="font-black text-sm uppercase tracking-widest">Done!</div>
+                </>
+              ) : !running ? (
+                <>
+                  <div className="text-4xl mb-2">{selected.emoji}</div>
+                  <div className="text-xs uppercase tracking-widest opacity-40">{cycles === 0 ? 'Tap Start' : 'Paused'}</div>
+                </>
+              ) : (
+                <>
+                  <div className="font-black text-lg uppercase tracking-widest">{currentPhase.label}</div>
+                  <div className="font-black text-6xl leading-none mt-1">
+                    {currentPhase.duration - phaseSeconds}
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
 
-        {/* Phase pills */}
-        <div className="flex gap-2 mb-8 flex-wrap justify-center">
+        {/* Phase indicators */}
+        <div className="flex gap-2 flex-wrap justify-center mb-8">
           {selected.phases.map((p, i) => (
             <div
               key={i}
-              className={`text-xs px-3 py-1.5 rounded-full transition-all border ${
+              className={`text-xs px-3 py-1.5 border-2 uppercase tracking-widest transition-all ${
                 i === phaseIdx && running
-                  ? 'bg-gray-900 text-white border-gray-900'
-                  : 'border-gray-200 text-gray-400'
+                  ? 'bg-black text-white border-black'
+                  : 'border-black opacity-20'
               }`}
             >
-              {p.label} · {p.duration}s
+              {p.label} {p.duration}s
             </div>
           ))}
         </div>
 
         {/* Button */}
         {!done ? (
-          <div className="flex justify-center pb-10">
-            <button
-              onClick={toggleRunning}
-              className="bg-black text-white px-12 py-3.5 rounded-full text-base font-semibold hover:bg-gray-800 transition-colors"
-            >
-              {running ? 'Pause' : cycles === 0 ? 'Start' : 'Resume'}
-            </button>
-          </div>
+          <button
+            onClick={toggleRunning}
+            className="bg-black text-white border-2 border-black px-16 py-4 font-black uppercase tracking-widest text-base hover:bg-white hover:text-black transition-colors"
+          >
+            {running ? 'Pause' : cycles === 0 ? 'Start' : 'Resume'}
+          </button>
         ) : (
-          <div className="text-center fade-in pb-10">
-            <div className="border border-gray-200 rounded-2xl p-6 mb-4">
-              <div className="text-3xl mb-2">🌿</div>
-              <div className="font-extrabold text-xl mb-1">Session Complete</div>
-              <div className="text-sm text-gray-400">{targetCycles} cycles · {fmt(totalSeconds)}</div>
+          <div className="text-center fade-in w-full max-w-sm">
+            <div className="border-2 border-black mb-4">
+              <div className="bg-black text-white px-6 py-3 text-center">
+                <div className="text-3xl mb-1">🌿</div>
+                <div className="font-black uppercase tracking-widest">Session Complete</div>
+                <div className="text-xs opacity-60 mt-1">{targetCycles} cycles · {fmt(totalSeconds)}</div>
+              </div>
             </div>
-            <div className="flex gap-3 justify-center">
-              <button onClick={restart} className="bg-black text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-gray-800 transition-colors">
+            <div className="flex gap-3">
+              <button onClick={restart} className="flex-1 bg-black text-white border-2 border-black py-3 font-black uppercase tracking-widest text-sm hover:bg-white hover:text-black transition-colors">
                 Go Again
               </button>
-              <button onClick={() => setSelected(null)} className="border border-gray-200 px-6 py-2.5 rounded-full text-sm text-gray-600 hover:bg-gray-50 transition-colors">
-                Change Technique
+              <button onClick={() => setSelected(null)} className="flex-1 border-2 border-black py-3 font-black uppercase tracking-widest text-sm hover:bg-black hover:text-white transition-colors">
+                Change
               </button>
             </div>
           </div>
         )}
 
         {!running && !done && cycles === 0 && (
-          <p className="text-xs text-gray-300 text-center pb-8">
-            Find a comfortable position. You can close your eyes once you start.
+          <p className="text-xs opacity-30 uppercase tracking-widest mt-6 text-center">
+            Find a comfortable position first
           </p>
         )}
       </div>
-    </div>
+    </main>
   );
 }

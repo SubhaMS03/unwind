@@ -136,159 +136,162 @@ export default function SlidePage() {
 
   if (!difficulty) {
     return (
-      <div className="min-h-screen w-full flex flex-col items-center">
-        <div className="w-full max-w-lg px-6">
-          <nav className="py-5 flex items-center gap-3 border-b border-gray-100">
-            <Link href="/" className="text-sm text-gray-400 hover:text-gray-800 transition-colors">← Back</Link>
-            <span className="text-gray-200">|</span>
-            <span className="font-semibold text-sm">🧩 Slide Puzzle</span>
-          </nav>
-
-          <div className="pt-10 pb-4">
-            <h1 className="text-3xl font-extrabold tracking-tight mb-1">Choose your scene</h1>
-            <p className="text-gray-400 text-sm">Pick an image and a difficulty to begin.</p>
+      <main className="min-h-screen flex flex-col max-w-2xl mx-auto px-4">
+        <nav className="border-b-2 border-black py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Link href="/" className="text-sm opacity-60 hover:opacity-100 transition-opacity">← Back</Link>
+            <span className="opacity-20">|</span>
+            <span className="font-black uppercase tracking-widest text-sm">🧩 Slide Puzzle</span>
           </div>
+        </nav>
 
-          {/* Image picker */}
-          <div className="mt-8 mb-8">
-            <div className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">Image</div>
-            <div className="grid grid-cols-3 gap-2">
-              {IMAGES.map((img, i) => (
-                <button
-                  key={i}
-                  onClick={() => setImageIdx(i)}
-                  className={`aspect-square rounded-xl overflow-hidden transition-all ${imageIdx === i ? 'ring-2 ring-black scale-105' : 'opacity-50 hover:opacity-80'}`}
-                  style={{ backgroundImage: `url(${img.url})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
-                  title={img.label}
-                />
-              ))}
+        <div className="flex-1 py-8">
+          <div className="border-2 border-black mb-6">
+            <div className="bg-black text-white px-5 py-2">
+              <span className="font-black uppercase tracking-widest text-xs">Choose Your Scene</span>
             </div>
-            <p className="text-xs text-gray-400 mt-2 text-center">{IMAGES[imageIdx].label}</p>
+            <div className="p-5">
+              <div className="text-xs uppercase tracking-widest opacity-50 mb-3">Image</div>
+              <div className="grid grid-cols-3 gap-2 mb-2">
+                {IMAGES.map((img, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setImageIdx(i)}
+                    className={`aspect-square overflow-hidden transition-all border-2 ${imageIdx === i ? 'border-black scale-105' : 'border-transparent opacity-50 hover:opacity-80'}`}
+                    style={{ backgroundImage: `url(${img.url})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+                    title={img.label}
+                  />
+                ))}
+              </div>
+              <p className="text-xs opacity-50 text-center uppercase tracking-widest">{IMAGES[imageIdx].label}</p>
+            </div>
           </div>
 
-          <div className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">Difficulty</div>
-          <div className="space-y-2 pb-10">
-            {DIFFICULTIES.map(d => (
+          <div className="text-xs uppercase tracking-widest opacity-50 mb-3 px-1">Difficulty</div>
+          <div className="space-y-0">
+            {DIFFICULTIES.map((d, i) => (
               <button
                 key={d.label}
                 onClick={() => startGame(d)}
-                className="w-full border border-gray-100 rounded-xl p-4 text-left hover:border-gray-300 hover:bg-gray-50 transition-all group flex items-center justify-between"
+                className={`w-full border-2 border-black p-4 text-left hover:bg-black hover:text-white transition-colors group flex items-center justify-between ${i > 0 ? '-mt-[2px]' : ''}`}
               >
                 <div>
-                  <div className="font-semibold text-gray-900">{d.label}</div>
-                  <div className="text-xs text-gray-400 mt-0.5">{d.desc}</div>
+                  <div className="font-black uppercase tracking-widest">{d.label}</div>
+                  <div className="text-xs opacity-50 mt-0.5">{d.desc}</div>
                 </div>
-                <span className="text-gray-300 group-hover:text-gray-600 transition-colors">→</span>
+                <span className="font-black opacity-30 group-hover:opacity-100">→</span>
               </button>
             ))}
           </div>
         </div>
-      </div>
+      </main>
     );
   }
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center">
-      <div className="w-full max-w-lg px-6">
-        <nav className="py-5 flex items-center justify-between border-b border-gray-100">
-          <div className="flex items-center gap-3">
-            <button onClick={() => { setDifficulty(null); setRunning(false); }} className="text-sm text-gray-400 hover:text-gray-800 transition-colors">← Change</button>
-            <span className="text-gray-200">|</span>
-            <span className="font-semibold text-sm">🧩 {difficulty.label} · {image.label}</span>
-          </div>
-          <button onClick={() => setShowPreview(v => !v)} className="text-xs text-gray-400 hover:text-gray-700 transition-colors border border-gray-100 px-3 py-1.5 rounded-full hover:border-gray-300">
-            {showPreview ? 'Hide' : 'Peek'} image
-          </button>
-        </nav>
+    <main className="min-h-screen flex flex-col max-w-2xl mx-auto px-4">
+      <nav className="border-b-2 border-black py-4 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <button onClick={() => { setDifficulty(null); setRunning(false); }} className="text-sm opacity-60 hover:opacity-100 transition-opacity">← Change</button>
+          <span className="opacity-20">|</span>
+          <span className="font-black uppercase tracking-widest text-sm">🧩 {difficulty.label} · {image.label}</span>
+        </div>
+        <button onClick={() => setShowPreview(v => !v)} className="text-xs border-2 border-black px-3 py-1 hover:bg-black hover:text-white transition-colors uppercase tracking-widest">
+          {showPreview ? 'Hide' : 'Peek'}
+        </button>
+      </nav>
 
-        {/* Stats */}
-        <div className="flex items-center justify-between py-5 border-b border-gray-100">
-          <div className="text-center">
-            <div className="text-2xl font-bold">{moves}</div>
-            <div className="text-xs text-gray-400 mt-0.5">moves</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold">{fmt(seconds)}</div>
-            <div className="text-xs text-gray-400 mt-0.5">time</div>
-          </div>
-          <button onClick={() => startGame(difficulty)} className="text-xs border border-gray-200 px-4 py-1.5 rounded-full hover:bg-gray-50 transition-colors">
+      {/* Stats */}
+      <div className="border-b-2 border-black flex">
+        <div className="flex-1 border-r-2 border-black p-4 text-center">
+          <div className="font-black text-2xl">{moves}</div>
+          <div className="text-xs uppercase tracking-widest opacity-50">Moves</div>
+        </div>
+        <div className="flex-1 border-r-2 border-black p-4 text-center">
+          <div className="font-black text-2xl">{fmt(seconds)}</div>
+          <div className="text-xs uppercase tracking-widest opacity-50">Time</div>
+        </div>
+        <div className="p-4 flex items-center">
+          <button onClick={() => startGame(difficulty)} className="border-2 border-black px-4 py-2 text-xs font-black uppercase tracking-widest hover:bg-black hover:text-white transition-colors">
             ↺ Restart
           </button>
         </div>
+      </div>
 
-        {/* Preview */}
-        {showPreview && (
-          <div className="mt-4 rounded-xl overflow-hidden fade-in">
-            <img src={image.url} alt={image.label} className="w-full object-cover" style={{ maxHeight: 180 }} />
-          </div>
-        )}
+      {/* Preview */}
+      {showPreview && (
+        <div className="border-b-2 border-black fade-in overflow-hidden">
+          <img src={image.url} alt={image.label} className="w-full object-cover" style={{ maxHeight: 160 }} />
+        </div>
+      )}
 
-        {/* Board */}
-        <div className="flex justify-center py-6">
-          <div
-            className="relative rounded-xl overflow-hidden"
-            style={{ width: boardPx, height: boardPx, border: '2px solid #e5e7eb' }}
-          >
-            {board.map((tile, idx) => {
-              if (tile === 0) return (
-                <div
-                  key="empty"
-                  className="absolute"
-                  style={{
-                    width: tileSize,
-                    height: tileSize,
-                    left: (idx % size) * tileSize,
-                    top: Math.floor(idx / size) * tileSize,
-                    backgroundColor: '#f3f4f6',
-                  }}
-                />
-              );
-              const origRow = Math.floor((tile - 1) / size);
-              const origCol = (tile - 1) % size;
-              return (
-                <div
-                  key={tile}
-                  className={`absolute tile ${slideAnim === idx ? 'tile-slide' : ''} ${solved ? 'win-glow' : ''}`}
-                  style={{
-                    width: tileSize - 2,
-                    height: tileSize - 2,
-                    left: (idx % size) * tileSize + 1,
-                    top: Math.floor(idx / size) * tileSize + 1,
-                    backgroundImage: `url(${image.url})`,
-                    backgroundSize: `${boardPx}px ${boardPx}px`,
-                    backgroundPosition: `-${origCol * tileSize}px -${origRow * tileSize}px`,
-                    borderRadius: 4,
-                    transition: 'left 0.12s ease, top 0.12s ease',
-                  }}
-                  onClick={() => handleTileClick(idx)}
-                  onTouchStart={e => handleTouchStart(e, idx)}
-                />
-              );
-            })}
-          </div>
+      {/* Board */}
+      <div className="flex-1 flex flex-col items-center justify-center py-8">
+        <div
+          className="relative overflow-hidden"
+          style={{ width: boardPx, height: boardPx, border: '2px solid black' }}
+        >
+          {board.map((tile, idx) => {
+            if (tile === 0) return (
+              <div
+                key="empty"
+                className="absolute"
+                style={{
+                  width: tileSize,
+                  height: tileSize,
+                  left: (idx % size) * tileSize,
+                  top: Math.floor(idx / size) * tileSize,
+                  backgroundColor: '#f0f0f0',
+                }}
+              />
+            );
+            const origRow = Math.floor((tile - 1) / size);
+            const origCol = (tile - 1) % size;
+            return (
+              <div
+                key={tile}
+                className={`absolute tile ${slideAnim === idx ? 'tile-slide' : ''}`}
+                style={{
+                  width: tileSize - 2,
+                  height: tileSize - 2,
+                  left: (idx % size) * tileSize + 1,
+                  top: Math.floor(idx / size) * tileSize + 1,
+                  backgroundImage: `url(${image.url})`,
+                  backgroundSize: `${boardPx}px ${boardPx}px`,
+                  backgroundPosition: `-${origCol * tileSize}px -${origRow * tileSize}px`,
+                  transition: 'left 0.12s ease, top 0.12s ease',
+                  outline: solved ? '2px solid black' : 'none',
+                }}
+                onClick={() => handleTileClick(idx)}
+                onTouchStart={e => handleTouchStart(e, idx)}
+              />
+            );
+          })}
         </div>
 
-        {/* Solved */}
-        {solved && (
-          <div className="fade-in border border-gray-200 rounded-2xl p-6 mb-6 text-center">
-            <div className="text-4xl mb-3">🎉</div>
-            <div className="font-extrabold text-xl mb-1">Puzzle Complete!</div>
-            <div className="text-sm text-gray-400 mb-5">{moves} moves · {fmt(seconds)}</div>
-            <div className="flex gap-3 justify-center">
-              <button onClick={() => startGame(difficulty)} className="bg-black text-white px-6 py-2.5 rounded-full text-sm font-semibold hover:bg-gray-800 transition-colors">
-                Play Again
-              </button>
-              <button onClick={() => setDifficulty(null)} className="border border-gray-200 px-6 py-2.5 rounded-full text-sm text-gray-600 hover:bg-gray-50 transition-colors">
-                Change Mode
-              </button>
-            </div>
-          </div>
-        )}
-
         {!solved && (
-          <p className="text-center text-xs text-gray-300 pb-6">Tap a tile next to the empty space to slide it</p>
+          <p className="text-xs opacity-30 uppercase tracking-widest mt-4">Tap a tile next to the empty space</p>
         )}
       </div>
-    </div>
+
+      {/* Solved */}
+      {solved && (
+        <div className="fade-in border-t-2 border-black">
+          <div className="bg-black text-white px-6 py-3 text-center">
+            <div className="text-3xl mb-1">🎉</div>
+            <div className="font-black text-xl uppercase tracking-widest">Puzzle Complete!</div>
+            <div className="text-xs opacity-60 mt-1">{moves} moves · {fmt(seconds)}</div>
+          </div>
+          <div className="p-5 flex gap-3">
+            <button onClick={() => startGame(difficulty)} className="flex-1 bg-black text-white border-2 border-black py-3 font-black uppercase tracking-widest text-sm hover:bg-white hover:text-black transition-colors">
+              Play Again
+            </button>
+            <button onClick={() => setDifficulty(null)} className="flex-1 border-2 border-black py-3 font-black uppercase tracking-widest text-sm hover:bg-black hover:text-white transition-colors">
+              Change Mode
+            </button>
+          </div>
+        </div>
+      )}
+    </main>
   );
 }
