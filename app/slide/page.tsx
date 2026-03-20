@@ -133,56 +133,46 @@ export default function SlidePage() {
   // Selection screen
   if (!difficulty) {
     return (
-      <main className="flex-1 flex flex-col w-full px-6 sm:px-12 lg:px-20">
-        {/* Nav */}
-        <nav className="py-5 flex items-center justify-between border-b border-white/5">
-          <div className="flex items-center gap-4">
-            <Link href="/" className="text-sm text-white/40 hover:text-white/70 transition-colors flex items-center gap-2">
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
-              Back
-            </Link>
-            <div className="w-px h-4 bg-white/10" />
-            <span className="text-sm font-medium text-white/70">🧩 Slide Puzzle</span>
+      <main className="flex-1 flex flex-col w-full bg-white">
+        <nav className="border-b border-[#E2DED9]">
+          <div className="max-w-5xl mx-auto px-6 py-4 flex items-center gap-4">
+            <Link href="/" className="text-sm text-[#7A7672] hover:text-[#2D2C2B] transition-colors">← Back</Link>
+            <div className="w-px h-4 bg-[#E2DED9]" />
+            <span className="text-sm font-semibold text-[#2D2C2B]">🧩 Slide Puzzle</span>
           </div>
         </nav>
 
-        <div className="flex-1 flex flex-col justify-center py-8 max-w-2xl mx-auto w-full">
-          {/* Image selection */}
-          <div className="mb-8">
-            <h2 className="text-xs font-semibold text-white/30 uppercase tracking-wider mb-4">Choose your scene</h2>
-            <div className="grid grid-cols-3 gap-3">
+        <div className="flex-1 flex flex-col items-center justify-center py-10">
+          <div className="max-w-md w-full px-6">
+            <h1 className="text-2xl font-bold text-[#2D2C2B] text-center mb-2">Choose your scene</h1>
+            <p className="text-sm text-[#7A7672] text-center mb-6">Pick an image, then select difficulty.</p>
+
+            <div className="grid grid-cols-3 gap-3 mb-3">
               {IMAGES.map((img, i) => (
                 <button
                   key={i}
                   onClick={() => setImageIdx(i)}
                   className={`aspect-square rounded-xl overflow-hidden transition-all duration-200 border-2 ${
-                    imageIdx === i ? 'border-violet-500 scale-[1.02] shadow-lg shadow-violet-500/20' : 'border-transparent opacity-50 hover:opacity-75'
+                    imageIdx === i ? 'border-[#7C5CBF] shadow-md' : 'border-transparent opacity-50 hover:opacity-75'
                   }`}
                   style={{ backgroundImage: `url(${img.url})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
-                  title={img.label}
                 />
               ))}
             </div>
-            <p className="text-sm text-white/40 text-center mt-3 font-medium">{IMAGES[imageIdx].label}</p>
-          </div>
+            <p className="text-sm text-[#7A7672] text-center mb-8">{IMAGES[imageIdx].label}</p>
 
-          {/* Difficulty */}
-          <div>
-            <h2 className="text-xs font-semibold text-white/30 uppercase tracking-wider mb-4">Select difficulty</h2>
-            <div className="space-y-3">
+            <div className="space-y-2">
               {DIFFICULTIES.map((d) => (
                 <button
                   key={d.label}
                   onClick={() => startGame(d)}
-                  className="w-full glass glass-hover rounded-xl p-5 text-left flex items-center justify-between group transition-all duration-200"
+                  className="w-full rounded-xl p-4 bg-[#FAF8F5] hover:bg-[#F0ECE7] text-left flex items-center justify-between group transition-colors"
                 >
                   <div>
-                    <div className="font-semibold text-white/90 text-base">{d.label}</div>
-                    <div className="text-xs text-white/30 mt-0.5">{d.desc}</div>
+                    <div className="font-semibold text-[#2D2C2B]">{d.label}</div>
+                    <div className="text-xs text-[#7A7672] mt-0.5">{d.desc}</div>
                   </div>
-                  <svg className="w-5 h-5 text-white/20 group-hover:text-white/50 group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                  </svg>
+                  <svg className="w-5 h-5 text-[#B5B1AD] group-hover:text-[#7C5CBF] group-hover:translate-x-0.5 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
                 </button>
               ))}
             </div>
@@ -194,43 +184,44 @@ export default function SlidePage() {
 
   // Game screen
   return (
-    <main className="flex-1 flex flex-col w-full px-6 sm:px-12 lg:px-20">
-      <nav className="py-5 flex items-center justify-between border-b border-white/5">
-        <div className="flex items-center gap-4">
-          <button onClick={() => { setDifficulty(null); setRunning(false); }} className="text-sm text-white/40 hover:text-white/70 transition-colors flex items-center gap-2">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
-            Change
-          </button>
-          <div className="w-px h-4 bg-white/10" />
-          <span className="text-sm font-medium text-white/70">🧩 {difficulty.label} · {image.label}</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <button onClick={() => setShowPreview(v => !v)} className="btn-secondary text-xs px-3 py-1.5">
-            {showPreview ? 'Hide' : 'Peek'}
-          </button>
-          <button onClick={() => startGame(difficulty)} className="btn-secondary text-xs px-3 py-1.5">
-            ↺ Restart
-          </button>
+    <main className="flex-1 flex flex-col w-full bg-white">
+      <nav className="border-b border-[#E2DED9]">
+        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button onClick={() => { setDifficulty(null); setRunning(false); }} className="text-sm text-[#7A7672] hover:text-[#2D2C2B] transition-colors">← Change</button>
+            <div className="w-px h-4 bg-[#E2DED9]" />
+            <span className="text-sm font-semibold text-[#2D2C2B]">🧩 {difficulty.label} · {image.label}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button onClick={() => setShowPreview(v => !v)} className="text-xs text-[#7A7672] hover:text-[#2D2C2B] px-3 py-1.5 rounded-full bg-[#FAF8F5] hover:bg-[#F0ECE7] transition-colors">
+              {showPreview ? 'Hide' : 'Peek'}
+            </button>
+            <button onClick={() => startGame(difficulty)} className="text-xs text-[#7A7672] hover:text-[#2D2C2B] px-3 py-1.5 rounded-full bg-[#FAF8F5] hover:bg-[#F0ECE7] transition-colors">
+              ↺ Restart
+            </button>
+          </div>
         </div>
       </nav>
 
       {/* Stats */}
-      <div className="flex items-center gap-6 py-4 border-b border-white/5">
-        <div className="text-center">
-          <div className="text-xl font-bold text-white">{moves}</div>
-          <div className="text-xs text-white/30">Moves</div>
-        </div>
-        <div className="w-px h-8 bg-white/10" />
-        <div className="text-center">
-          <div className="text-xl font-bold text-white">{fmt(seconds)}</div>
-          <div className="text-xs text-white/30">Time</div>
+      <div className="border-b border-[#E2DED9]">
+        <div className="max-w-5xl mx-auto px-6 py-3 flex items-center gap-6">
+          <div className="text-center">
+            <span className="text-lg font-bold text-[#2D2C2B]">{moves}</span>
+            <span className="text-xs text-[#7A7672] ml-1">moves</span>
+          </div>
+          <div className="w-px h-5 bg-[#E2DED9]" />
+          <div className="text-center">
+            <span className="text-lg font-bold text-[#2D2C2B]">{fmt(seconds)}</span>
+            <span className="text-xs text-[#7A7672] ml-1">time</span>
+          </div>
         </div>
       </div>
 
       {/* Preview */}
       {showPreview && (
-        <div className="fade-in overflow-hidden rounded-xl mt-4 border border-white/10">
-          <img src={image.url} alt={image.label} className="w-full object-cover" style={{ maxHeight: 160 }} />
+        <div className="max-w-5xl mx-auto px-6 pt-4">
+          <img src={image.url} alt={image.label} className="w-full max-h-40 object-cover rounded-xl" />
         </div>
       )}
 
@@ -238,21 +229,11 @@ export default function SlidePage() {
       <div className="flex-1 flex flex-col items-center justify-center py-8">
         <div
           className="relative overflow-hidden rounded-xl"
-          style={{ width: boardPx, height: boardPx, border: '1px solid rgba(255,255,255,0.1)', boxShadow: '0 20px 60px rgba(0,0,0,0.4)' }}
+          style={{ width: boardPx, height: boardPx, boxShadow: '0 4px 20px rgba(0,0,0,0.08)' }}
         >
           {board.map((tile, idx) => {
             if (tile === 0) return (
-              <div
-                key="empty"
-                className="absolute"
-                style={{
-                  width: tileSize,
-                  height: tileSize,
-                  left: (idx % size) * tileSize,
-                  top: Math.floor(idx / size) * tileSize,
-                  backgroundColor: 'rgba(255,255,255,0.02)',
-                }}
-              />
+              <div key="empty" className="absolute" style={{ width: tileSize, height: tileSize, left: (idx % size) * tileSize, top: Math.floor(idx / size) * tileSize, backgroundColor: '#F0ECE7' }} />
             );
             const origRow = Math.floor((tile - 1) / size);
             const origCol = (tile - 1) % size;
@@ -261,16 +242,11 @@ export default function SlidePage() {
                 key={tile}
                 className={`absolute tile ${slideAnim === idx ? 'tile-slide' : ''}`}
                 style={{
-                  width: tileSize - 2,
-                  height: tileSize - 2,
-                  left: (idx % size) * tileSize + 1,
-                  top: Math.floor(idx / size) * tileSize + 1,
-                  backgroundImage: `url(${image.url})`,
-                  backgroundSize: `${boardPx}px ${boardPx}px`,
+                  width: tileSize - 2, height: tileSize - 2,
+                  left: (idx % size) * tileSize + 1, top: Math.floor(idx / size) * tileSize + 1,
+                  backgroundImage: `url(${image.url})`, backgroundSize: `${boardPx}px ${boardPx}px`,
                   backgroundPosition: `-${origCol * tileSize}px -${origRow * tileSize}px`,
-                  transition: 'left 0.12s ease, top 0.12s ease',
-                  borderRadius: 4,
-                  outline: solved ? '2px solid rgba(167,139,250,0.5)' : 'none',
+                  transition: 'left 0.12s ease, top 0.12s ease', borderRadius: 6,
                 }}
                 onClick={() => handleTileClick(idx)}
                 onTouchStart={e => handleTouchStart(e, idx)}
@@ -278,26 +254,19 @@ export default function SlidePage() {
             );
           })}
         </div>
-
-        {!solved && (
-          <p className="text-xs text-white/20 mt-5">Tap a tile next to the empty space</p>
-        )}
+        {!solved && <p className="text-xs text-[#B5B1AD] mt-5">Tap a tile next to the empty space</p>}
       </div>
 
       {/* Solved */}
       {solved && (
         <div className="fade-up pb-8">
-          <div className="glass rounded-2xl p-8 text-center max-w-sm mx-auto glow-purple">
-            <div className="text-4xl mb-3">🎉</div>
-            <div className="text-xl font-bold text-white mb-1">Puzzle Complete!</div>
-            <div className="text-sm text-white/40 mb-6">{moves} moves · {fmt(seconds)}</div>
+          <div className="max-w-sm mx-auto bg-[#E8E0F5] rounded-2xl p-8 text-center">
+            <div className="text-4xl mb-2">🎉</div>
+            <h2 className="text-xl font-bold text-[#2D2C2B] mb-1">Puzzle Complete!</h2>
+            <p className="text-sm text-[#5A5856] mb-6">{moves} moves · {fmt(seconds)}</p>
             <div className="flex gap-3">
-              <button onClick={() => startGame(difficulty)} className="btn-primary flex-1 py-3 text-sm rounded-xl">
-                Play Again
-              </button>
-              <button onClick={() => setDifficulty(null)} className="btn-secondary flex-1 py-3 text-sm rounded-xl">
-                Change Mode
-              </button>
+              <button onClick={() => startGame(difficulty)} className="flex-1 bg-[#7C5CBF] text-white font-semibold py-3 rounded-full text-sm hover:bg-[#6A4DAD] transition-colors">Play Again</button>
+              <button onClick={() => setDifficulty(null)} className="flex-1 bg-white text-[#2D2C2B] font-semibold py-3 rounded-full text-sm hover:bg-[#F0ECE7] transition-colors">Change Mode</button>
             </div>
           </div>
         </div>

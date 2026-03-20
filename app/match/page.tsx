@@ -11,12 +11,7 @@ const CARD_SETS = {
 
 type Difficulty = 'easy' | 'moderate' | 'hard';
 
-interface Card {
-  id: number;
-  emoji: string;
-  flipped: boolean;
-  matched: boolean;
-}
+interface Card { id: number; emoji: string; flipped: boolean; matched: boolean; }
 
 function createCards(emojis: string[]): Card[] {
   const doubled = [...emojis, ...emojis];
@@ -24,17 +19,8 @@ function createCards(emojis: string[]): Card[] {
   return shuffled.map((emoji, i) => ({ id: i, emoji, flipped: false, matched: false }));
 }
 
-const GRID: Record<Difficulty, string> = {
-  easy: 'grid-cols-4',
-  moderate: 'grid-cols-4',
-  hard: 'grid-cols-6',
-};
-
-const DIFF_META: Record<Difficulty, { pairs: number; desc: string }> = {
-  easy: { pairs: 4, desc: '4 pairs · 8 cards' },
-  moderate: { pairs: 8, desc: '8 pairs · 16 cards' },
-  hard: { pairs: 12, desc: '12 pairs · 24 cards' },
-};
+const GRID: Record<Difficulty, string> = { easy: 'grid-cols-4', moderate: 'grid-cols-4', hard: 'grid-cols-6' };
+const DIFF_META: Record<Difficulty, string> = { easy: '4 pairs · 8 cards', moderate: '8 pairs · 16 cards', hard: '12 pairs · 24 cards' };
 
 export default function MatchPage() {
   const [difficulty, setDifficulty] = useState<Difficulty | null>(null);
@@ -46,58 +32,26 @@ export default function MatchPage() {
   const [solved, setSolved] = useState(false);
   const [locked, setLocked] = useState(false);
 
-  useEffect(() => {
-    if (!running) return;
-    const t = setInterval(() => setSeconds(s => s + 1), 1000);
-    return () => clearInterval(t);
-  }, [running]);
+  useEffect(() => { if (!running) return; const t = setInterval(() => setSeconds(s => s + 1), 1000); return () => clearInterval(t); }, [running]);
 
   const startGame = (diff: Difficulty) => {
-    setDifficulty(diff);
-    setCards(createCards(CARD_SETS[diff]));
-    setFlipped([]);
-    setMoves(0);
-    setSeconds(0);
-    setRunning(true);
-    setSolved(false);
-    setLocked(false);
+    setDifficulty(diff); setCards(createCards(CARD_SETS[diff])); setFlipped([]); setMoves(0); setSeconds(0); setRunning(true); setSolved(false); setLocked(false);
   };
 
   const handleCardClick = useCallback((id: number) => {
     if (locked || solved) return;
     const card = cards.find(c => c.id === id);
     if (!card || card.flipped || card.matched) return;
-
     const newFlipped = [...flipped, id];
     const newCards = cards.map(c => c.id === id ? { ...c, flipped: true } : c);
-    setCards(newCards);
-    setFlipped(newFlipped);
-
+    setCards(newCards); setFlipped(newFlipped);
     if (newFlipped.length === 2) {
-      setMoves(m => m + 1);
-      setLocked(true);
+      setMoves(m => m + 1); setLocked(true);
       const [a, b] = newFlipped.map(fid => newCards.find(c => c.id === fid)!);
       if (a.emoji === b.emoji) {
-        setTimeout(() => {
-          const matched = newCards.map(c =>
-            c.id === a.id || c.id === b.id ? { ...c, matched: true } : c
-          );
-          setCards(matched);
-          setFlipped([]);
-          setLocked(false);
-          if (matched.every(c => c.matched)) {
-            setSolved(true);
-            setRunning(false);
-          }
-        }, 400);
+        setTimeout(() => { const matched = newCards.map(c => c.id === a.id || c.id === b.id ? { ...c, matched: true } : c); setCards(matched); setFlipped([]); setLocked(false); if (matched.every(c => c.matched)) { setSolved(true); setRunning(false); } }, 400);
       } else {
-        setTimeout(() => {
-          setCards(newCards.map(c =>
-            c.id === a.id || c.id === b.id ? { ...c, flipped: false } : c
-          ));
-          setFlipped([]);
-          setLocked(false);
-        }, 900);
+        setTimeout(() => { setCards(newCards.map(c => c.id === a.id || c.id === b.id ? { ...c, flipped: false } : c)); setFlipped([]); setLocked(false); }, 900);
       }
     }
   }, [cards, flipped, locked, solved]);
@@ -106,97 +60,71 @@ export default function MatchPage() {
   const matchedCount = cards.filter(c => c.matched).length / 2;
   const totalPairs = cards.length / 2;
 
-  // Selection screen
   if (!difficulty) {
     return (
-      <main className="flex-1 flex flex-col w-full px-6 sm:px-12 lg:px-20">
-        <nav className="py-5 flex items-center gap-4 border-b border-white/5">
-          <Link href="/" className="text-sm text-white/40 hover:text-white/70 transition-colors flex items-center gap-2">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
-            Back
-          </Link>
-          <div className="w-px h-4 bg-white/10" />
-          <span className="text-sm font-medium text-white/70">🃏 Memory Match</span>
-        </nav>
-
-        <div className="flex-1 flex flex-col justify-center py-8 max-w-lg mx-auto w-full">
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold text-white mb-2">Memory Match</h1>
-            <p className="text-sm text-white/40">Flip cards to find all matching pairs. Test your focus.</p>
+      <main className="flex-1 flex flex-col w-full bg-white">
+        <nav className="border-b border-[#E2DED9]">
+          <div className="max-w-5xl mx-auto px-6 py-4 flex items-center gap-4">
+            <Link href="/" className="text-sm text-[#7A7672] hover:text-[#2D2C2B] transition-colors">← Back</Link>
+            <div className="w-px h-4 bg-[#E2DED9]" />
+            <span className="text-sm font-semibold text-[#2D2C2B]">🃏 Memory Match</span>
           </div>
-
-          <div className="space-y-3">
-            {(['easy', 'moderate', 'hard'] as Difficulty[]).map((d) => (
-              <button
-                key={d}
-                onClick={() => startGame(d)}
-                className="w-full glass glass-hover rounded-xl p-5 text-left flex items-center justify-between group transition-all duration-200"
-              >
-                <div>
-                  <div className="font-semibold text-white/90 capitalize text-base">{d}</div>
-                  <div className="text-xs text-white/30 mt-0.5">{DIFF_META[d].desc}</div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-lg">{CARD_SETS[d].slice(0, 3).join('')}</span>
-                  <svg className="w-5 h-5 text-white/20 group-hover:text-white/50 group-hover:translate-x-1 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-                  </svg>
-                </div>
-              </button>
-            ))}
+        </nav>
+        <div className="flex-1 flex flex-col items-center justify-center py-10">
+          <div className="max-w-md w-full px-6">
+            <h1 className="text-2xl font-bold text-[#2D2C2B] text-center mb-2">Memory Match</h1>
+            <p className="text-sm text-[#7A7672] text-center mb-8">Flip cards and find all matching pairs.</p>
+            <div className="space-y-2">
+              {(['easy', 'moderate', 'hard'] as Difficulty[]).map((d) => (
+                <button key={d} onClick={() => startGame(d)} className="w-full rounded-xl p-4 bg-[#FAF8F5] hover:bg-[#F0ECE7] text-left flex items-center justify-between group transition-colors">
+                  <div>
+                    <div className="font-semibold text-[#2D2C2B] capitalize">{d}</div>
+                    <div className="text-xs text-[#7A7672] mt-0.5">{DIFF_META[d]}</div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-lg">{CARD_SETS[d].slice(0, 3).join('')}</span>
+                    <svg className="w-5 h-5 text-[#B5B1AD] group-hover:text-[#7C5CBF] group-hover:translate-x-0.5 transition-all" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+                  </div>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </main>
     );
   }
 
-  // Game screen
   return (
-    <main className="flex-1 flex flex-col w-full px-6 sm:px-12 lg:px-20">
-      <nav className="py-5 flex items-center justify-between border-b border-white/5">
-        <div className="flex items-center gap-4">
-          <button onClick={() => { setDifficulty(null); setRunning(false); }} className="text-sm text-white/40 hover:text-white/70 transition-colors flex items-center gap-2">
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
-            Change
-          </button>
-          <div className="w-px h-4 bg-white/10" />
-          <span className="text-sm font-medium text-white/70 capitalize">🃏 {difficulty}</span>
+    <main className="flex-1 flex flex-col w-full bg-white">
+      <nav className="border-b border-[#E2DED9]">
+        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button onClick={() => { setDifficulty(null); setRunning(false); }} className="text-sm text-[#7A7672] hover:text-[#2D2C2B] transition-colors">← Change</button>
+            <div className="w-px h-4 bg-[#E2DED9]" />
+            <span className="text-sm font-semibold text-[#2D2C2B] capitalize">🃏 {difficulty}</span>
+          </div>
+          <button onClick={() => startGame(difficulty)} className="text-xs text-[#7A7672] hover:text-[#2D2C2B] px-3 py-1.5 rounded-full bg-[#FAF8F5] hover:bg-[#F0ECE7] transition-colors">↺ Restart</button>
         </div>
-        <button onClick={() => startGame(difficulty)} className="btn-secondary text-xs px-3 py-1.5">↺ Restart</button>
       </nav>
 
-      {/* Stats */}
-      <div className="flex items-center gap-6 py-4 border-b border-white/5">
-        <div className="text-center">
-          <div className="text-xl font-bold text-white">{matchedCount}/{totalPairs}</div>
-          <div className="text-xs text-white/30">Pairs</div>
-        </div>
-        <div className="w-px h-8 bg-white/10" />
-        <div className="text-center">
-          <div className="text-xl font-bold text-white">{moves}</div>
-          <div className="text-xs text-white/30">Moves</div>
-        </div>
-        <div className="w-px h-8 bg-white/10" />
-        <div className="text-center">
-          <div className="text-xl font-bold text-white">{fmt(seconds)}</div>
-          <div className="text-xs text-white/30">Time</div>
+      <div className="border-b border-[#E2DED9]">
+        <div className="max-w-5xl mx-auto px-6 py-3 flex items-center gap-6">
+          <div><span className="text-lg font-bold text-[#2D2C2B]">{matchedCount}/{totalPairs}</span><span className="text-xs text-[#7A7672] ml-1">pairs</span></div>
+          <div className="w-px h-5 bg-[#E2DED9]" />
+          <div><span className="text-lg font-bold text-[#2D2C2B]">{moves}</span><span className="text-xs text-[#7A7672] ml-1">moves</span></div>
+          <div className="w-px h-5 bg-[#E2DED9]" />
+          <div><span className="text-lg font-bold text-[#2D2C2B]">{fmt(seconds)}</span><span className="text-xs text-[#7A7672] ml-1">time</span></div>
         </div>
       </div>
 
-      {/* Cards */}
       <div className="flex-1 flex items-center justify-center py-6">
-        <div className={`grid ${GRID[difficulty]} gap-2 sm:gap-3 w-full max-w-md`}>
+        <div className={`grid ${GRID[difficulty]} gap-2.5 sm:gap-3 w-full max-w-md px-6`}>
           {cards.map(card => (
             <button
               key={card.id}
               onClick={() => handleCardClick(card.id)}
-              className={`aspect-square text-2xl sm:text-3xl flex items-center justify-center transition-all duration-200 rounded-xl border
-                ${card.matched
-                  ? 'bg-violet-500/20 border-violet-500/30 match-pop'
-                  : card.flipped
-                  ? 'bg-white/10 border-white/20 flip-in'
-                  : 'bg-white/[0.03] border-white/[0.06] hover:bg-white/[0.06] hover:border-white/10 cursor-pointer'
-                }`}
+              className={`aspect-square text-2xl sm:text-3xl flex items-center justify-center transition-all duration-200 rounded-xl
+                ${card.matched ? 'bg-[#E8E0F5] match-pop' : card.flipped ? 'bg-white shadow-md border border-[#E2DED9] flip-in' : 'bg-[#FAF8F5] hover:bg-[#F0ECE7] border border-[#E2DED9] cursor-pointer'}`}
             >
               {card.flipped || card.matched ? card.emoji : ''}
             </button>
@@ -204,20 +132,15 @@ export default function MatchPage() {
         </div>
       </div>
 
-      {/* Solved */}
       {solved && (
         <div className="fade-up pb-8">
-          <div className="glass rounded-2xl p-8 text-center max-w-sm mx-auto glow-blue">
-            <div className="text-4xl mb-3">✨</div>
-            <div className="text-xl font-bold text-white mb-1">All Pairs Found!</div>
-            <div className="text-sm text-white/40 mb-6">{moves} moves · {fmt(seconds)}</div>
+          <div className="max-w-sm mx-auto bg-[#D6EAF0] rounded-2xl p-8 text-center">
+            <div className="text-4xl mb-2">✨</div>
+            <h2 className="text-xl font-bold text-[#2D2C2B] mb-1">All Pairs Found!</h2>
+            <p className="text-sm text-[#5A5856] mb-6">{moves} moves · {fmt(seconds)}</p>
             <div className="flex gap-3">
-              <button onClick={() => startGame(difficulty)} className="btn-primary flex-1 py-3 text-sm rounded-xl">
-                Play Again
-              </button>
-              <button onClick={() => setDifficulty(null)} className="btn-secondary flex-1 py-3 text-sm rounded-xl">
-                Change Mode
-              </button>
+              <button onClick={() => startGame(difficulty)} className="flex-1 bg-[#7C5CBF] text-white font-semibold py-3 rounded-full text-sm hover:bg-[#6A4DAD] transition-colors">Play Again</button>
+              <button onClick={() => setDifficulty(null)} className="flex-1 bg-white text-[#2D2C2B] font-semibold py-3 rounded-full text-sm hover:bg-[#F0ECE7] transition-colors">Change Mode</button>
             </div>
           </div>
         </div>
